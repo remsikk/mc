@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Склад и деревня</title>
+<meta name="description" content="Карта сундуков склада и план зачарований деревни библиотекарей, Minecraft Java 1.21">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Onest:wght@400;500;600;700&family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<style>
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#E8E6E1;font-family:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body[data-tab="village"]{background:#ECEFE9}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) body{background:#171411}
+  :root:not([data-theme="light"]) body[data-tab="village"]{background:#101311}
+}
+:root[data-theme="dark"] body{background:#171411}
+:root[data-theme="dark"] body[data-tab="village"]{background:#101311}
+
+.topbar{
+  position:sticky;top:0;z-index:60;display:flex;justify-content:center;gap:6px;
+  padding:8px 12px;background:#DFDBD4;border-bottom:1px solid #C6C0B6;
+  padding-top:calc(8px + env(safe-area-inset-top,0px));
+}
+body[data-tab="village"] .topbar{background:#E1E6DD;border-bottom-color:#CBD2C7}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .topbar{background:#201C18;border-bottom-color:#383029}
+  :root:not([data-theme="light"]) body[data-tab="village"] .topbar{background:#171B18;border-bottom-color:#2A302B}
+}
+:root[data-theme="dark"] .topbar{background:#201C18;border-bottom-color:#383029}
+:root[data-theme="dark"] body[data-tab="village"] .topbar{background:#171B18;border-bottom-color:#2A302B}
+
+.tab{
+  display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:999px;
+  padding:7px 16px 7px 12px;font:inherit;font-size:15px;font-weight:600;line-height:1.2;
+  color:#5D554B;background:transparent;cursor:pointer;
+}
+.tab svg{width:18px;height:18px;flex:none}
+.tab:hover{color:#211D19}
+.tab.on{background:#FBFAF7;color:#211D19;border-color:#C6C0B6;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.tab:focus-visible{outline:2px solid #17806B;outline-offset:2px}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .tab{color:#A69C8F}
+  :root:not([data-theme="light"]) .tab:hover{color:#EEE7DB}
+  :root:not([data-theme="light"]) .tab.on{background:#312A23;color:#EEE7DB;border-color:#4A4038;box-shadow:none}
+}
+:root[data-theme="dark"] .tab{color:#A69C8F}
+:root[data-theme="dark"] .tab.on{background:#312A23;color:#EEE7DB;border-color:#4A4038;box-shadow:none}
+
+.view[hidden]{display:none!important}
+@media (max-width:480px){.tab{padding:6px 13px 6px 10px;font-size:14px}}
+
+/* ================= Склад ================= */
+.view-storage{--bg:#E8E6E1;
+  --surface:#F6F5F1;
+  --raised:#FFFFFF;
+  --ink:#211D19;
+  --muted:#675F56;
+  --line:#D6D1C7;
+  --line-strong:#B8B1A5;
+  --wood:#4E3A2A;
+  --wood-soft:#DCD2C4;
+  --amber:#8F5F14;
+  --amber-bg:#F2E4C4;
+  --on-amber:#FFF8EA;
+  --sign:#E6D7A9;
+  --sign-ink:#2B2116;
+  --sign-edge:#C4AE74;
+  --hit:#17806B;
+  --hit-bg:#D6EEE7;
+  --reserve:#8E877D;
+  --f-pixel:"Pixelify Sans","Onest",system-ui,sans-serif;
+  --f-body:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .view-storage{--bg:#171411;
+    --surface:#201C18;
+    --raised:#29241F;
+    --ink:#EEE7DB;
+    --muted:#A69C8F;
+    --line:#383029;
+    --line-strong:#51473D;
+    --wood:#A7815B;
+    --wood-soft:#2F2721;
+    --amber:#E6AB45;
+    --amber-bg:#3A2C16;
+    --on-amber:#1A140D;
+    --sign:#D6C390;
+    --sign-ink:#231A10;
+    --sign-edge:#A08A57;
+    --hit:#4BC9AC;
+    --hit-bg:#12382F;
+    --reserve:#7E7569;
+    color-scheme:dark;}}
+:root[data-theme="dark"] .view-storage{--bg:#171411;
+  --surface:#201C18;
+  --raised:#29241F;
+  --ink:#EEE7DB;
+  --muted:#A69C8F;
+  --line:#383029;
+  --line-strong:#51473D;
+  --wood:#A7815B;
+  --wood-soft:#2F2721;
+  --amber:#E6AB45;
+  --amber-bg:#3A2C16;
+  --on-amber:#1A140D;
+  --sign:#D6C390;
+  --sign-ink:#231A10;
+  --sign-edge:#A08A57;
+  --hit:#4BC9AC;
+  --hit-bg:#12382F;
+  --reserve:#7E7569;
+  color-scheme:dark;}
+.view-storage *{box-sizing:border-box}
+html{scroll-behavior:smooth}
+.view-storage{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.view-storage .wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 72px}
+@media (max-width:480px){.view-storage .wrap{padding-inline:16px;padding-block:20px 56px}}
+.view-storage .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.view-storage h1{font-family:var(--f-pixel);font-weight:600;font-size:clamp(34px,6vw,52px);line-height:1;margin:8px 0 12px;text-wrap:balance}
+.view-storage .lede{max-width:64ch;color:var(--muted);margin:0}
+.view-storage .stats{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:13.5px;color:var(--muted)}
+.view-storage .stats b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.view-storage /* search */
+.searchbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:12px;margin-top:20px;border-bottom:1px solid var(--line)}
+.view-storage .search{display:flex;align-items:center;gap:10px;background:var(--raised);border:1px solid var(--line-strong);border-radius:6px;padding-inline:12px}
+.view-storage .search:focus-within{border-color:var(--hit);box-shadow:0 0 0 3px var(--hit-bg)}
+.view-storage .search svg{flex:none;color:var(--muted)}
+.view-storage .search input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;color:var(--ink);padding-block:12px;outline:none}
+.view-storage .search input::placeholder{color:var(--muted);opacity:.8}
+.view-storage .clear{flex:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;padding:6px 4px;border-radius:4px}
+.view-storage .clear:hover{color:var(--ink)}
+.view-storage .clear:focus-visible, .view-storage .tile:focus-visible, .view-storage .result:focus-visible{outline:2px solid var(--hit);outline-offset:2px}
+.view-storage .results{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.view-storage .results:empty{display:none}
+.view-storage .rnote{font-size:13px;color:var(--muted);margin-right:4px}
+.view-storage .result{font:inherit;font-size:13px;line-height:1.3;border:1px solid var(--line-strong);background:var(--raised);color:var(--ink);border-radius:4px;padding:5px 9px;cursor:pointer;text-align:left}
+.view-storage .result:hover{border-color:var(--hit)}
+.view-storage .result code{font-family:var(--f-mono);font-size:12px;color:var(--hit);margin-right:6px}
+.view-storage /* plans */
+.plans{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:16px;margin-top:22px}
+@media (max-width:860px){.view-storage .plans{grid-template-columns:minmax(0,1fr)}}
+.view-storage .card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
+.view-storage .card-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px;margin:0 0 12px}
+.view-storage .card-h h2{font-family:var(--f-pixel);font-weight:600;font-size:19px;margin:0}
+.view-storage .card-h span{font-size:12.5px;color:var(--muted)}
+.view-storage .plan-scroll{overflow-x:auto}
+.view-storage .floor1{position:relative;display:grid;grid-template-columns:30px repeat(4,minmax(64px,1fr));grid-template-rows:auto 24px auto auto 24px auto;gap:6px;border:3px solid var(--wood);border-radius:2px;padding:8px 8px 8px 0;min-width:300px}
+.view-storage .entrance{grid-column:1;grid-row:2/6;margin-left:-3px;background:var(--surface);display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.view-storage .entrance span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--f-pixel);font-size:14px;color:var(--amber);letter-spacing:.12em}
+.view-storage .corr{grid-column:2/6;display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.view-storage .corr::after{content:"";flex:1;border-top:1px dashed var(--line-strong)}
+.view-storage .corr.a{grid-row:2}
+.view-storage .corr.b{grid-row:5}
+.view-storage .island-bg{grid-column:3/5;grid-row:3/5;background:var(--wood-soft);border-radius:3px;margin:-4px}
+.view-storage .floor2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto 40px auto;gap:6px;border:3px solid var(--wood);border-radius:2px;padding:8px}
+.view-storage .stairs{grid-column:1/3;grid-row:2;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.view-storage .stairs i{display:block;width:44px;height:18px;border:1px solid var(--line-strong);background:repeating-linear-gradient(90deg,var(--wood-soft) 0 5px,transparent 5px 8px)}
+.view-storage .tile{position:relative;z-index:1;display:flex;flex-direction:column;gap:2px;padding:7px 8px;min-height:56px;border:1px solid var(--line-strong);background:var(--raised);color:var(--ink);border-radius:3px;font:inherit;text-align:left;cursor:pointer}
+.view-storage .tile:hover{border-color:var(--amber)}
+.view-storage .tile .c{font-family:var(--f-pixel);font-size:15px;line-height:1.1;color:var(--amber)}
+.view-storage .tile .t{font-size:12px;line-height:1.25;hyphens:auto;overflow-wrap:anywhere}
+@media (max-width:480px){.view-storage .floor1{grid-template-columns:24px repeat(4,minmax(0,1fr));gap:5px}.view-storage .tile{padding:6px;min-height:52px}.view-storage .tile .t{font-size:11px}}
+.view-storage .search input::-webkit-search-cancel-button{display:none}
+.view-storage .tile .n{position:absolute;top:5px;right:6px;font-family:var(--f-mono);font-size:11px;color:var(--hit)}
+.view-storage .tile.hit{border-color:var(--hit);box-shadow:inset 0 0 0 1px var(--hit);background:var(--hit-bg)}
+.view-storage .tile.spare .t{color:var(--muted)}
+.view-storage /* how to read */
+.howto{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px 22px;align-items:start}
+@media (max-width:560px){.view-storage .howto{grid-template-columns:1fr}}
+.view-storage .mini{display:grid;grid-template-columns:repeat(2,34px);gap:4px;padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--raised)}
+.view-storage .mini b{display:flex;align-items:center;justify-content:center;height:24px;font-family:var(--f-pixel);font-weight:400;font-size:13px;background:var(--amber-bg);color:var(--amber);border-radius:2px}
+.view-storage .mini b.eye{background:var(--amber);color:var(--on-amber)}
+.view-storage .mini-cap{grid-column:1/-1;font-size:11px;color:var(--muted);text-align:center;line-height:1.2;margin-top:2px}
+.view-storage .rules{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;max-width:70ch}
+.view-storage .rules li{padding-left:14px;position:relative}
+.view-storage .rules li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--amber)}
+.view-storage .rules code{font-family:var(--f-mono);font-size:12.5px;color:var(--amber)}
+.view-storage .chip{font-family:var(--f-pixel);font-size:13px;background:var(--sign);color:var(--sign-ink);border:1px solid var(--sign-edge);border-radius:2px;padding:0 5px}
+.view-storage .dash{font-size:12.5px;border:1px dashed var(--line-strong);color:var(--reserve);border-radius:2px;padding:0 5px}
+.view-storage /* sections */
+.group{margin-top:44px}
+.view-storage .group-h h2{font-family:var(--f-pixel);font-weight:600;font-size:clamp(24px,3.4vw,30px);line-height:1.1;margin:0 0 6px}
+.view-storage .group-h p{margin:0 0 16px;color:var(--muted);font-size:14px;max-width:72ch}
+.view-storage .sections{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,500px),1fr));gap:16px}
+.view-storage .sec{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;scroll-margin-top:150px;transition:opacity .15s}
+.view-storage .sec.wide{grid-column:1/-1}
+.view-storage .sec-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.view-storage .badge{flex:none;font-family:var(--f-pixel);font-weight:600;font-size:19px;line-height:1.2;min-width:46px;text-align:center;padding:3px 8px;border-radius:3px;background:var(--amber-bg);color:var(--amber);border:1px solid var(--line-strong)}
+.view-storage .sec h3{margin:0;font-size:17px;font-weight:600;line-height:1.25;text-wrap:balance}
+.view-storage .where{font-size:12.5px;color:var(--muted);margin-top:2px}
+.view-storage .note{font-size:13px;color:var(--muted);margin:-2px 0 12px;max-width:70ch}
+.view-storage .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.view-storage .grid.one{grid-template-columns:1fr}
+.view-storage .grid.six{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:980px){.view-storage .grid.six{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.view-storage .grid.six{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:360px){.view-storage .grid{grid-template-columns:1fr}}
+.view-storage .chest{display:flex;flex-direction:column;gap:7px;padding:10px;background:var(--raised);border:1px solid var(--line);border-radius:4px;scroll-margin-top:170px;transition:opacity .15s,background-color .15s}
+.view-storage .chest .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.view-storage .sign{font-family:var(--f-pixel);font-size:14.5px;line-height:1.2;white-space:pre-line;background:var(--sign);color:var(--sign-ink);border:1px solid var(--sign-edge);border-radius:2px;padding:3px 7px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.09);overflow-wrap:anywhere}
+.view-storage .code{flex:none;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);padding-top:4px;font-variant-numeric:tabular-nums}
+.view-storage .items{margin:0;font-size:13px;line-height:1.45;overflow-wrap:break-word}
+.view-storage .frame{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:auto;padding-top:2px}
+.view-storage .frame::before{content:"";flex:none;width:11px;height:11px;border:2px solid var(--wood);background:var(--sign)}
+.view-storage .chest.spare{background:transparent;border-style:dashed;border-color:var(--line-strong)}
+.view-storage .chest.spare .sign{background:transparent;color:var(--reserve);border:1px dashed var(--line-strong);box-shadow:none}
+.view-storage .chest.spare .items{color:var(--muted)}
+.view-storage .chest.inbox{border-color:var(--amber)}
+.view-storage .chest.inbox .sign{background:var(--amber);color:var(--on-amber);border-color:var(--amber);box-shadow:none}
+.view-storage .wrap.searching .sec:not(.has-hit){opacity:.32}
+.view-storage .wrap.searching .sec.has-hit .chest:not(.hit){opacity:.5}
+.view-storage .chest.hit{border-color:var(--hit);box-shadow:0 0 0 1px var(--hit);background:var(--hit-bg)}
+.view-storage .chest.flash{animation:flash 1.3s ease-out 1}
+@keyframes flash{0%{box-shadow:0 0 0 7px var(--hit)}100%{box-shadow:0 0 0 1px var(--hit)}}
+.view-storage .foot{margin-top:40px;font-size:13px;color:var(--muted);max-width:72ch}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.view-storage .chest.flash{animation:none}.view-storage .sec, .view-storage .chest{transition:none}}
+/* ================= Жители ================= */
+.view-village{color-scheme:light;
+  --bg:#ECEFE9;
+  --surface:#FAFBF8;
+  --surface-2:#F0F3EE;
+  --ink:#1A1E1B;
+  --muted:#5B655E;
+  --line:#D5DAD2;
+  --field:#FFFFFF;
+  --emerald:#0B8543;
+  --on-emerald:#FFFFFF;
+  --emerald-soft:#DCF1E3;
+  --done-bg:#F0F8F2;
+  --glint:#6146BE;
+  --glint-soft:#ECE7FB;
+  --warn:#8F5100;
+  --warn-soft:#F8E8CF;
+  --display:"Pixelify Sans", ui-monospace, "Cascadia Mono", "Courier New", monospace;
+  --body:"Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .view-village{color-scheme:dark;
+    --bg:#101311; --surface:#171B18; --surface-2:#1D221E; --ink:#E4E9E4; --muted:#95A097;
+    --line:#2A302B; --field:#111412;
+    --emerald:#3FD384; --on-emerald:#0C1A11; --emerald-soft:#15301F; --done-bg:#131E17;
+    --glint:#B6A5FF; --glint-soft:#251E3C; --warn:#EDB15D; --warn-soft:#33250F;}}
+:root[data-theme="dark"] .view-village{color-scheme:dark;
+  --bg:#101311; --surface:#171B18; --surface-2:#1D221E; --ink:#E4E9E4; --muted:#95A097;
+  --line:#2A302B; --field:#111412;
+  --emerald:#3FD384; --on-emerald:#0C1A11; --emerald-soft:#15301F; --done-bg:#131E17;
+  --glint:#B6A5FF; --glint-soft:#251E3C; --warn:#EDB15D; --warn-soft:#33250F;}
+.view-village *{box-sizing:border-box}
+.view-village{margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.45;
+  padding-inline:16px;padding-block:28px 64px;
+  -webkit-font-smoothing:antialiased;}
+.view-village .wrap{max-width:920px;margin-inline:auto;display:grid;gap:20px}
+.view-village :focus-visible{outline:2px solid var(--glint);outline-offset:2px}
+.view-village .num{font-variant-numeric:tabular-nums;font-weight:600}
+.view-village /* ---------- Header ---------- */
+.top{display:grid;gap:14px}
+.view-village .title-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+.view-village h1{font-family:var(--display);font-weight:700;margin:0;
+  font-size:clamp(28px,5vw,40px);line-height:1.05;letter-spacing:.01em;text-wrap:balance;}
+.view-village .save{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.view-village .save::before{content:"";width:8px;height:8px;background:var(--muted);flex:none}
+.view-village .save[data-s="saved"]::before{background:var(--emerald)}
+.view-village .save[data-s="saving"]::before, .view-village .save[data-s="connecting"]::before{background:var(--glint)}
+.view-village .save[data-s="error"]::before, .view-village .save[data-s="readonly"]::before, .view-village .save[data-s="local"]::before{background:var(--warn)}
+.view-village .lede{margin:0;color:var(--muted);max-width:64ch}
+.view-village .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.view-village .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px;align-content:start}
+.view-village .stat-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.view-village .stat-num{font-size:30px;line-height:1.05;font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:-.01em}
+.view-village .stat-num small{font-size:17px;color:var(--muted);font-weight:600}
+.view-village .stat-label{color:var(--muted);font-size:13.5px;line-height:1.3}
+.view-village .stat-note{font-size:12.5px;color:var(--muted)}
+.view-village .segs{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.view-village .segs .grp{display:flex;gap:3px}
+.view-village .segs.grouped{gap:3px 9px}
+.view-village .segs i{width:11px;height:11px;background:var(--surface-2);border:1px solid var(--line);flex:none}
+.view-village .segs i.on{background:var(--emerald);border-color:var(--emerald)}
+.view-village .stat .segs i{width:12px;height:12px}
+.view-village .toolbar{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}
+.view-village .check{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.view-village input[type="checkbox"]{width:18px;height:18px;accent-color:var(--emerald);margin:0;cursor:pointer;flex:none}
+.view-village input:disabled, .view-village select:disabled{cursor:not-allowed;opacity:.6}
+.view-village h2.sec{font-family:var(--display);font-weight:700;font-size:23px;margin:8px 0 -6px}
+.view-village .sec-note{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.view-village /* ---------- Houses ---------- */
+.houses{display:grid;gap:16px}
+.view-village .house{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.view-village .house-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 16px}
+.view-village .house-name{font-family:var(--display);font-weight:700;font-size:23px;margin:0;line-height:1}
+.view-village .house-count{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.view-village .ready{font-size:12.5px;font-weight:600;color:var(--on-emerald);background:var(--emerald);padding:2px 9px;border-radius:999px}
+.view-village .spacer{flex:1 1 0;min-width:0}
+.view-village .built{display:inline-flex;align-items:center;gap:8px;padding:6px 13px 6px 10px;
+  border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:14px;
+  background:var(--field);user-select:none;}
+.view-village .built.on{background:var(--emerald-soft);border-color:var(--emerald)}
+.view-village .cols, .view-village .row{display:grid;
+  grid-template-columns:22px minmax(0,1fr) 104px 96px 70px 158px;
+  grid-template-areas:"chk who lvl price min verdict";
+  gap:12px;align-items:center;padding-inline:16px;}
+.view-village .cols{padding-block:7px;border-top:1px solid var(--line);background:var(--surface-2);
+  font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+.view-village .row{padding-block:12px;border-top:1px solid var(--line)}
+.view-village .row.is-done{background:var(--done-bg)}
+.view-village .a-chk{grid-area:chk;display:flex}
+.view-village .a-who{grid-area:who}
+.view-village .a-lvl{grid-area:lvl}
+.view-village .a-price{grid-area:price}
+.view-village .a-min{grid-area:min}
+.view-village .a-verdict{grid-area:verdict}
+.view-village .who{display:grid;gap:2px;cursor:pointer;min-width:0}
+.view-village .ench{font-weight:600;font-size:15.5px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.view-village .maxlvl{font-weight:600;font-size:12.5px;color:var(--glint);background:var(--glint-soft);padding:1px 7px;border-radius:5px;line-height:1.4;letter-spacing:.03em}
+.view-village .use{font-size:13px;color:var(--muted)}
+.view-village .fl{display:none;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.view-village select, .view-village .price input{font:inherit;font-size:15px;color:var(--ink);background:var(--field);
+  border:1px solid var(--line);border-radius:8px;height:36px;width:100%;}
+.view-village select{padding:0 8px;cursor:pointer;font-weight:600}
+.view-village .lvl-static{font-weight:600;color:var(--glint);display:inline-flex;align-items:center;height:36px;padding-inline:9px}
+.view-village .hint{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.view-village .hint:empty{display:none}
+.view-village .price{position:relative}
+.view-village .price svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--emerald);pointer-events:none}
+.view-village .price input{padding:0 8px 0 29px;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+.view-village .price input::-webkit-outer-spin-button, .view-village .price input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.view-village .price input::placeholder{color:var(--muted);font-weight:400}
+.view-village .min b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;display:block;line-height:1.15}
+.view-village .min .mx{display:block;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.view-village .chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:500;border:1px solid transparent;white-space:nowrap;font-variant-numeric:tabular-nums}
+.view-village .chip.idle{color:var(--muted);border-color:var(--line)}
+.view-village .chip.best{background:var(--emerald);color:var(--on-emerald)}
+.view-village .chip.good{background:var(--emerald-soft);color:var(--emerald)}
+.view-village .chip.mid{background:var(--surface-2);color:var(--ink);border-color:var(--line)}
+.view-village .chip.high, .view-village .chip.out{background:var(--warn-soft);color:var(--warn)}
+.view-village .cure{display:block;font-size:12px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.view-village .cure:empty{display:none}
+.view-village .wrap.only-todo .row.is-done{display:none}
+.view-village .all-done{margin:0;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.view-village /* ---------- Kits ---------- */
+.kits{display:grid;gap:10px}
+.view-village .kit{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.view-village .kit>summary{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;
+  list-style:none;user-select:none;flex-wrap:wrap;}
+.view-village .kit>summary::-webkit-details-marker{display:none}
+.view-village .kit>summary:hover{background:var(--surface-2)}
+.view-village .kicon{flex:none;width:26px;height:26px;color:var(--ink);opacity:.9;display:block}
+.view-village .kicon svg{display:block;width:26px;height:26px}
+.view-village .kname{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.1;flex:1 1 auto;min-width:110px}
+.view-village .kbadges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.view-village .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;
+  font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink);}
+.view-village .badge.em{background:var(--emerald-soft);border-color:transparent;color:var(--emerald)}
+.view-village .badge.miss{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.view-village .badge.ok{background:var(--emerald);border-color:transparent;color:var(--on-emerald)}
+.view-village .badge.soft{background:transparent;border-color:var(--line);color:var(--muted);font-weight:500}
+.view-village .chev{flex:none;width:18px;height:18px;color:var(--muted);transition:transform .15s ease}
+.view-village .kit[open] .chev{transform:rotate(90deg)}
+.view-village .kbody{border-top:1px solid var(--line);padding:14px 16px 16px;display:grid;gap:16px}
+.view-village .kopts{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.view-village .kopt{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted)}
+.view-village .kopt select{width:auto;height:32px;font-size:14px}
+.view-village .ktoggle{display:inline-flex;align-items:center;gap:7px;padding:5px 12px 5px 9px;border:1px solid var(--line);
+  border-radius:999px;cursor:pointer;font-size:13.5px;background:var(--field);user-select:none;}
+.view-village .ktoggle.on{background:var(--glint-soft);border-color:var(--glint);color:var(--ink)}
+.view-village .ktoggle input{width:16px;height:16px;accent-color:var(--glint)}
+.view-village .ksub{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+.view-village .buys{display:grid;gap:0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.view-village .buy{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 12px;background:var(--surface-2);font-size:14px}
+.view-village .buy+.buy{border-top:1px solid var(--line)}
+.view-village .buy-n{min-width:0}
+.view-village .buy-n b{font-weight:600}
+.view-village .buy-n span{color:var(--muted);font-size:12.5px;display:block}
+.view-village .buy-c{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13.5px}
+.view-village .buy-e{display:inline-flex;align-items:center;gap:5px;color:var(--emerald);font-weight:600;font-variant-numeric:tabular-nums}
+.view-village .buy.lack .buy-n b{color:var(--warn)}
+.view-village .steps{list-style:none;margin:0;padding:0;display:grid;gap:0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.view-village .step{display:grid;grid-template-columns:20px minmax(0,1fr) 78px 74px;gap:10px;align-items:center;padding:9px 12px;font-size:14px}
+.view-village .step+.step{border-top:1px solid var(--line)}
+.view-village .step.on{background:var(--done-bg)}
+.view-village .step.on .step-t{color:var(--muted);text-decoration:line-through}
+.view-village .step-t{min-width:0;cursor:pointer}
+.view-village .step-t em, .view-village .step-c em{font-style:normal;color:var(--muted);font-size:12px;display:block;font-weight:500}
+.view-village .step-c{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;font-size:13.5px;text-align:right}
+.view-village .step-e{display:inline-flex;align-items:center;justify-content:flex-end;gap:4px;color:var(--emerald);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+.view-village .step.over .step-c{color:var(--warn)}
+.view-village .step-hd{display:grid;grid-template-columns:20px minmax(0,1fr) 78px 74px;gap:10px;padding:7px 12px;background:var(--surface-2);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.view-village .step-hd span:nth-child(n+3){text-align:right}
+.view-village .ktotal{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:14px;color:var(--muted)}
+.view-village .ktotal b{color:var(--ink);font-variant-numeric:tabular-nums}
+.view-village .kwarn{margin:0;padding:10px 12px;border-radius:9px;background:var(--warn-soft);color:var(--warn);font-size:13.5px}
+.view-village /* ---------- Notes ---------- */
+.notes{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.view-village .notes h2{font-family:var(--display);font-weight:700;font-size:19px;margin:0 0 10px}
+.view-village .notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--muted);max-width:72ch}
+.view-village .notes b{color:var(--ink);font-weight:600}
+@media (max-width: 700px){.view-village .cols{display:none}.view-village .row{grid-template-columns:22px repeat(3,minmax(0,1fr));
+    grid-template-areas:
+      "chk who who who"
+      ".   lvl price min"
+      ".   verdict verdict verdict";
+    row-gap:10px;column-gap:10px;padding-inline:14px;}.view-village .fl{display:block}.view-village .a-verdict{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.view-village .cure{margin-top:0}.view-village .house-head{padding:13px 14px}.view-village .kname{flex:1 1 auto;min-width:0}.view-village .chev{order:1}.view-village .kbadges{order:2;flex:1 1 100%}.view-village .kit>summary{gap:10px;padding:12px 14px}.view-village .step-hd{letter-spacing:.02em;font-size:10.5px}.view-village .buy{grid-template-columns:minmax(0,1fr) auto;row-gap:2px}.view-village .buy-c{grid-column:1}.view-village .step{grid-template-columns:20px minmax(0,1fr) 62px 62px;gap:8px;padding:9px 10px}.view-village .step-hd{grid-template-columns:20px minmax(0,1fr) 62px 62px;gap:8px;padding:7px 10px}}
+@media (prefers-reduced-motion: reduce){.view-village *{transition:none!important}}
+/* ================= Поверх ================= */
+
+/* поверх обоих разделов: липкий поиск встаёт под панель вкладок */
+.view-storage .searchbar{top:calc(var(--bar-h, 52px) + env(safe-area-inset-top,0px))}
+.view-storage .sec{scroll-margin-top:calc(var(--bar-h, 52px) + 148px)}
+.view-storage .chest{scroll-margin-top:calc(var(--bar-h, 52px) + 168px)}
+
+</style>
+</head>
+<body data-tab="storage">
+
+<script>
+/* ============================================================
+   Синхронизация между устройствами.
+   Эти два значения связывают страницу с базой Supabase.
+   Менять их не нужно. Ключ публичный, он для этого и создан.
+   ============================================================ */
+window.SUPABASE = {
+  url: "https://qsfovrpsnrfqxsgrngdn.supabase.co",
+  key: "sb_publishable_bN71mNMVLDYbYxppMoDnXw_YaVVB_WF"
+};
+window.SYNC_SPACE = "main";   /* имя мира: поменяй, если захочешь вести второй сервер отдельно */
+</script>
+
+
+<nav class="topbar" role="tablist" aria-label="Разделы">
+  <button class="tab" type="button" id="tab-storage" role="tab" aria-controls="view-storage" aria-selected="true">
+    <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M1.6 2.4h12.8v4H9.4v1.8H6.6V6.4H1.6z"/><path d="M1.6 7.4h5v1.8h2.8V7.4h5v6.2H1.6z" opacity=".55"/></svg>
+    Склад
+  </button>
+  <button class="tab" type="button" id="tab-village" role="tab" aria-controls="view-village" aria-selected="false">
+    <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 .8 15 5.4v1.8h-2v7.2H3V7.2H1V5.4z"/><path d="M6.1 7.6h3.8v6.8H6.1z" opacity=".45"/></svg>
+    Жители
+  </button>
+</nav>
+
+<section class="view view-storage" id="view-storage" role="tabpanel" aria-labelledby="tab-storage">
+<div class="wrap" lang="ru">
+  
+    <div class="eyebrow">Склад · Java 1.21.5</div>
+    <h1>Карта сундуков</h1>
+    <p class="lede">Раскладка всех предметов игры по 80 двойным сундукам первого этажа и 24 одиночным второго. Найди предмет поиском или нажми на секцию на плане.</p>
+    <div class="stats">
+      <span>1 этаж: <b>69</b> категорий, <b>1</b> сброс, <b>10</b> резервных</span>
+      <span>2 этаж: <b>23</b> категории, <b>1</b> резервный</span>
+    </div>
+  
+
+  <div class="searchbar">
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Где лежит… например: порох, кварц, ракеты" aria-label="Найти предмет">
+      <button class="clear" id="clear" type="button" hidden>Сбросить</button>
+    </label>
+    <div class="results" id="results" aria-live="polite"></div>
+  </div>
+
+  <div class="plans">
+    <section class="card" aria-label="План первого этажа">
+      <div class="card-h"><h2>1 этаж</h2><span>80 двойных · вид сверху</span></div>
+      <div class="plan-scroll"><div class="floor1" id="floor1">
+        <div class="entrance"><span>вход</span></div>
+        <div class="corr a">коридор А</div>
+        <div class="island-bg" aria-hidden="true"></div>
+        <div class="corr b">коридор Б</div>
+      </div></div>
+    </section>
+    <section class="card" aria-label="План второго этажа">
+      <div class="card-h"><h2>2 этаж</h2><span>24 одиночных</span></div>
+      <div class="floor2" id="floor2">
+        <div class="stairs"><i></i>лестница</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px" aria-label="Как читать карту">
+    <div class="card-h"><h2>Как читать</h2></div>
+    <div class="howto">
+      <div class="mini" aria-hidden="true">
+        <b>1</b><b>2</b><b class="eye">3</b><b class="eye">4</b><b class="eye">5</b><b class="eye">6</b><b>7</b><b>8</b>
+        <div class="mini-cap">секция на стене,<br>лицом к ней</div>
+      </div>
+      <ul class="rules">
+        <li>Код <code>А1-3</code> значит секция А1, сундук №3. Встань лицом к стене и считай слева направо, сверху вниз: верхний ряд 1–2, дальше 3–4, 5–6, нижний ряд 7–8.</li>
+        <li>На острове сундуки идут сверху вниз (1–4), на втором этаже слева направо (1–6).</li>
+        <li>Самое ходовое лежит на уровне глаз, во 2-м и 3-м рядах (подсвечены на схеме).</li>
+        <li><span class="chip">Жёлтая плашка</span> это готовый текст для таблички у сундука, он влезает в строку.</li>
+        <li><span class="dash">Резерв</span> это пустой сундук. Занимай его, когда соседняя категория переполнится.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div id="groups"></div>
+
+  <p class="foot">Остров на плане нарисован примерно: у тебя две его секции смотрят в коридор А и две в коридор Б. Если коридоры удобнее поменять местами, коды можно оставить прежними, поменяй только таблички.</p>
+</div>
+</section>
+<section class="view view-village" id="view-village" role="tabpanel" aria-labelledby="tab-village" hidden>
+<div class="wrap">
+  
+    <div class="title-row">
+      <h1>Деревня библиотекарей</h1>
+      <span class="save" id="save" data-s="connecting" role="status">Подключаю сохранение…</span>
+    </div>
+    <p class="lede">33 библиотекаря в 7 домах. Отмечай построенные дома и готовых жителей, вписывай цену выпавшей книги — рядом сразу видно, насколько она дороже минимальной. Ниже наборы: по клику раскрывается порядок операций на наковальне и итоговая стоимость.</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-top"><span class="stat-num" id="sumV">0<small>/33</small></span><span class="stat-label">жителей готово</span></div>
+        <div class="segs grouped" id="segsV" aria-hidden="true"></div>
+      </div>
+      <div class="stat">
+        <div class="stat-top"><span class="stat-num" id="sumH">0<small>/7</small></span><span class="stat-label">домов построено</span></div>
+        <div class="segs" id="segsH" aria-hidden="true"></div>
+      </div>
+      <div class="stat">
+        <div class="stat-top"><span class="stat-num" id="sumXP">0</span><span class="stat-label">уровней опыта на все наборы</span></div>
+        <div class="stat-note" id="noteXP"></div>
+      </div>
+      <div class="stat">
+        <div class="stat-top"><span class="stat-num" id="sumEm">0</span><span class="stat-label">изумрудов на все книги</span></div>
+        <div class="stat-note" id="noteEm"></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <label class="check"><input type="checkbox" id="onlyTodo"> Показывать только несделанных</label>
+    </div>
+  
+
+  <h2 class="sec">Библиотекари</h2>
+  <main class="houses" id="houses"></main>
+
+  <h2 class="sec">Наборы</h2>
+  <p class="sec-note">План пересчитывается под уровни книг, которые выбраны выше: если у жителя книга ниже максимума, в план сама добавляется склейка нескольких книг. Порядок операций подобран так, чтобы суммарная цена была минимальной, а ни один шаг не упёрся в потолок наковальни.</p>
+  <div class="kits" id="kits"></div>
+
+  <footer class="notes">
+    <h2>Как всё считается</h2>
+    <ul>
+      <li><b>Минимум и «до»</b> — базовая цена книги у библиотекаря в Java: от 2 + 3 × уровень до 6 + 13 × уровень изумрудов, но не больше 64. Меняешь уровень — пересчитывается.</li>
+      <li><b>Починка, Ледоход, Скорость души</b> — сокровища, их цена у жителя удвоена.</li>
+      <li><b>Штраф наковальни</b> — после каждой операции у предмета растёт скрытый штраф: 0, 1, 3, 7, 15, 31. Он прибавляется к цене следующей операции, поэтому книги выгодно склеивать между собой, а не вешать на предмет по одной.</li>
+      <li><b>Потолок 40 уровней</b> — при такой цене наковальня в выживании пишет «Слишком дорого». План выстроен так, чтобы до него не доходило.</li>
+      <li><b>После лечения</b> жителя-зомби цена книги падает примерно на 20, но не ниже 1 изумруда.</li>
+      <li><b>«Вне диапазона»</b> бывает из-за спроса на сделку, скидки героя деревни или опечатки.</li>
+      <li><b>Проворство и Скорость души</b> у библиотекарей не купить: первое лежит в сундуках древнего города, второе берётся обменом с пиглинами и в бастионах. В изумрудах они не считаются.</li>
+      <li><b>Незерит</b> добавляй в самом конце на кузнечном столе: зачарования сохранятся, штраф не вырастет.</li>
+    </ul>
+  </footer>
+</div>
+</section>
+<script>
+
+(function(){
+  const SCOPE = document.querySelector('#view-storage .wrap');
+  const WOOD = 'брёвна и древесина (в т.ч. обтёсанные), доски, ступени, плиты, заборы, калитки, двери, люки, кнопки, нажимные плиты, таблички, подвесные таблички, лодки и лодки с сундуком';
+  const wood = (n, s, extra) => ({n, s, i: n + ': ' + WOOD + (extra ? '; ' + extra : '')});
+  const R = () => ({spare:true});
+
+  const SECTIONS = [
+    {id:'A1', code:'А1', group:'A', kind:'wall', title:'Камень', short:'Камень',
+     pos:'Коридор А, стена, секция 1 (у входа)',
+     note:'Булыжник и камень по два сундука, рядом друг с другом на уровне глаз.',
+     chests:[
+      {n:'Каменные кирпичи', s:'Кам. кирпичи', i:'Каменные кирпичи: обычные, замшелые, потрескавшиеся, резные; ступени, плиты и стены из них'},
+      {n:'Гранит, диорит, андезит', s:'Гранит, диорит\nАндезит', i:'Гранит, диорит, андезит и их полированные версии; ступени, плиты, стены'},
+      {n:'Булыжник', s:'Булыжник', i:'Булыжник'},
+      {n:'Булыжник №2', s:'Булыжник 2', i:'Булыжник (когда первый заполнится), замшелый булыжник; ступени, плиты и стены из булыжника'},
+      {n:'Камень', s:'Камень', i:'Камень'},
+      {n:'Камень №2', s:'Камень 2', i:'Камень (продолжение), гладкий камень; каменные ступени и плиты, плиты из гладкого камня'},
+      {n:'Глубинный сланец', s:'Глуб. сланец', i:'Глубинный сланец и колотый глубинный сланец'},
+      {n:'Сланец для стройки', s:'Сланец декор', i:'Полированный глубинный сланец, сланцевые кирпичи и плитка (в т.ч. потрескавшиеся), резной сланец; ступени, плиты и стены'}
+     ]},
+    {id:'A2', code:'А2', group:'A', kind:'wall', title:'Земля, песок и минералы', short:'Земля, песок',
+     pos:'Коридор А, стена, секция 2',
+     note:'Земля в двух сундуках на уровне глаз. Призмарин тоже здесь, это строительный блок.',
+     chests:[
+      {n:'Туф, кальцит, натёчник', s:'Туф, кальцит', i:'Туф: обычный, полированный, кирпичи, резной; ступени, плиты, стены. Кальцит, блоки натёчника, остроконечный натёчник', kw:'капельник сталактит'},
+      {n:'Обсидиан, лёд, снег', s:'Обсидиан, лёд', i:'Обсидиан, плачущий обсидиан, лёд, плотный и синий лёд, снежные блоки, снег, снежки'},
+      {n:'Земля', s:'Земля', i:'Земля'},
+      {n:'Земля №2', s:'Земля 2', i:'Земля (продолжение), каменистая и корнистая земля, дёрн, подзол, мицелий'},
+      {n:'Песок и песчаник', s:'Песок', i:'Песок; песчаник: обычный, резной, гладкий, обтёсанный; ступени, плиты, стены'},
+      {n:'Красный песок и гравий', s:'Красный песок\nГравий', i:'Красный песок, красный песчаник всех видов со ступенями, плитами и стенами; гравий'},
+      {n:'Глина, грязь, кирпичи', s:'Глина, грязь', i:'Глина и комки глины, кирпичи (предмет и блоки), грязь, утрамбованная грязь, кирпичи из грязи; ступени, плиты, стены'},
+      {n:'Призмарин и губки', s:'Призмарин', i:'Призмарин, призмариновые кирпичи, тёмный призмарин; ступени и плиты; губки, сухие и мокрые'}
+     ]},
+    {id:'A3', code:'А3', group:'A', kind:'wall', title:'Дерево', short:'Дерево',
+     pos:'Коридор А, стена, секция 3',
+     note:'Один сундук на породу: брёвна, доски и всё, что из них крафтится. Саженцы и листва лежат в Б3.',
+     chests:[
+      wood('Мангровое дерево', 'Мангровое', 'мангровые корни и илистые мангровые корни'),
+      wood('Вишня', 'Вишня'),
+      wood('Дуб', 'Дуб'),
+      wood('Ель', 'Ель'),
+      wood('Берёза', 'Берёза'),
+      wood('Тёмный дуб', 'Тёмный дуб'),
+      wood('Тропическое дерево', 'Тропическое'),
+      wood('Акация', 'Акация')
+     ]},
+    {id:'A4', code:'А4', group:'A', kind:'wall', title:'Цветные и декоративные блоки', short:'Цвет и декор',
+     pos:'Коридор А, стена, секция 4 (дальняя)',
+     note:'В сундуке «Декор» теперь ещё рабочие блоки и алхимия. Если он переполнится, соседний резерв А4-2 как раз рядом. Медные слитки и руда на втором этаже (В1-4).',
+     chests:[
+      {n:'Медь', s:'Медь', i:'Медные блоки всех стадий окисления, вощёные и нет; резная медь, ступени, плиты, решётки, двери, люки, медные лампы, громоотводы', kw:'медная медный'},
+      R(),
+      {n:'Шерсть и ковры', s:'Шерсть', i:'Шерсть и ковры всех 16 цветов'},
+      {n:'Бетон', s:'Бетон', i:'Бетон и сухой бетон всех 16 цветов', kw:'порошок'},
+      {n:'Освещение', s:'Освещение', i:'Факелы и факелы душ, фонари и фонари душ, свечи, светокамень, морские фонари, жабосветы, стержни Края, светильники Джека, костры', kw:'свет эндер'},
+      {n:'Декор, рабочие блоки, алхимия', s:'Декор', i:'Декор: кровати, флаги, картины, рамки и светящиеся рамки, цветочные и расписные горшки, книжные полки (обычные и резные), стойки для брони, цепи, железные решётки, лестницы, колокола, проигрыватели. Рабочие блоки: верстаки, печи, коптильни, плавильные печи, наковальни, точила, камнерезы, ткацкие станки, столы картографа, кузнечные столы, столы лучника, кафедры, компостеры, бочки, сундуки, сундуки Края, столы зачаровывания, магнетит, якоря возрождения. Алхимия: варочные стойки, котлы, пузырьки (пустые и с водой), незерский нарост, огненные стержни и порошок, светокаменная пыль, приготовленный паучий глаз, сверкающий ломтик арбуза, сгусток магмы, слёзы гаста, кроличьи лапки, щитки черепахи, мембраны фантома, драконье дыхание', kw:'знамёна знамя баннер ваза мебель эндер-сундук эндерсундук ферментированный зельеварение'},
+      {n:'Терракота', s:'Терракота', i:'Терракота обычная, цветная (16 цветов) и глазурованная (16 цветов)'},
+      {n:'Стекло', s:'Стекло', i:'Стекло обычное, окрашенное (16 цветов) и тонированное; стеклянные панели всех цветов'}
+     ]},
+    {id:'O1', code:'О1', group:'A', kind:'island', title:'Сброс и резерв', short:'Сброс, резерв',
+     pos:'Остров, сторона коридора А, ближняя ко входу секция',
+     note:'Сброс стоит у входа: выгружай туда инвентарь после вылазки, а раскладывай потом.',
+     chests:[
+      R(),
+      {n:'Сброс', s:'СБРОС', i:'Всё неразобранное. Кидай сюда, если некогда раскладывать или не знаешь, куда положить', kw:'несортированное разное', inbox:true},
+      R(),
+      R()
+     ]},
+    {id:'O2', code:'О2', group:'A', kind:'island', title:'Редкое дерево', short:'Редкое дерево',
+     pos:'Остров, сторона коридора А, дальняя секция',
+     note:'Породы, которых обычно немного: бледный дуб, бамбук и два дерева из Незера.',
+     chests:[
+      wood('Бледный дуб', 'Бледный дуб', 'сердце скрипуна; смола: комки, блоки, кирпичи со ступенями, плитами и стенами'),
+      {n:'Бамбук', s:'Бамбук', i:'Бамбук, блоки бамбука, бамбуковые доски и мозаика со ступенями и плитами, заборы, калитки, двери, люки, таблички, плоты, строительные леса'},
+      {n:'Багровое дерево', s:'Багровое', i:'Багровое дерево: стебли и гифы (в т.ч. обтёсанные), доски, ступени, плиты, заборы, калитки, двери, люки, кнопки, нажимные плиты, таблички'},
+      {n:'Искажённое дерево', s:'Искажённое', i:'Искажённое дерево: стебли и гифы (в т.ч. обтёсанные), доски, ступени, плиты, заборы, калитки, двери, люки, кнопки, нажимные плиты, таблички'}
+     ]},
+
+    {id:'B1', code:'Б1', group:'B', kind:'wall', title:'Снаряжение и зелья', short:'Снаряжение',
+     pos:'Коридор Б, стена, секция 1 (у входа)',
+     note:'Всё для вылазки в одной секции у входа.',
+     chests:[
+      {n:'Зелья', s:'Зелья', i:'Питьевые зелья: лечение, регенерация, сила, скорость, огнестойкость, ночное зрение, подводное дыхание, невидимость, прыгучесть, плавное падение'},
+      {n:'Зелья №2', s:'Зелья 2', i:'Взрывные и туманные зелья; зелья вреда, отравления, слабости, замедления; зелья из 1.21 (вихрь, плетение, слизь, заражение); зловещие бутыли'},
+      {n:'Инструменты', s:'Инструменты', i:'Кирки, топоры, лопаты, мотыги из любого материала'},
+      {n:'Утварь и вёдра', s:'Утварь, вёдра', i:'Ножницы, удочки (и с морковью, и с грибом), огнива, компасы, часы, подзорные трубы, кисти, поводки, бирки, сёдла, мешки; вёдра: пустые, с водой, лавой, молоком, снегом, рыбой, аксолотлем'},
+      {n:'Броня', s:'Броня', i:'Шлемы, нагрудники, поножи, ботинки, щиты, черепаший панцирь, конская броня, броня для волка'},
+      {n:'Оружие', s:'Оружие', i:'Мечи, луки, арбалеты'},
+      {n:'Стрелы и ракеты', s:'Стрелы, ракеты', i:'Стрелы: обычные, спектральные, с эффектами; фейерверки и звёзды фейерверка (ракеты для элитр), заряды ветра, огненные шары, динамит', kw:'tnt тнт взрывчатка фейерверк'},
+      R()
+     ]},
+    {id:'B2', code:'Б2', group:'B', kind:'wall', title:'Материалы и дроп мобов', short:'Материалы',
+     pos:'Коридор Б, стена, секция 2',
+     note:'Дроп с враждебных мобов в двух сундуках: частый и более редкий.',
+     chests:[
+      {n:'Кварц и аметист', s:'Кварц, аметист', i:'Кварц Незера, кварцевая руда, кварцевые блоки всех видов со ступенями и плитами; осколки и блоки аметиста, аметистовые друзы'},
+      {n:'Археология', s:'Черепки', i:'Гончарные черепки всех видов, яйца нюхача и прочие находки с кистью'},
+      {n:'Дроп мобов', s:'Дроп мобов', i:'Кости, костная мука, костные блоки, нити, паутина, порох, гнилая плоть, паучьи глаза, перья, сгустки слизи'},
+      {n:'Дроп мобов №2', s:'Дроп мобов 2', i:'Жемчуг Края, око Края, кожа, кроличья шкурка, щитки броненосца, стержни вихря, осколки и кристаллы призмарина', kw:'эндер перл эндержемчуг'},
+      {n:'Крафт-мелочь', s:'Палки, бумага', i:'Палки, миски, кремень, бумага, книги, книги с пером, подписанные книги, карты и пустые карты'},
+      {n:'Красители', s:'Красители', i:'Все 16 красителей, чернильные мешки, светящиеся чернильные мешки', kw:'краска краски'},
+      R(),
+      R()
+     ]},
+    {id:'B3', code:'Б3', group:'B', kind:'wall', title:'Природа и фермерство', short:'Природа',
+     pos:'Коридор Б, стена, секция 3',
+     note:'Два резерва: растений в игре много, эта категория растёт быстрее других.',
+     chests:[
+      {n:'Кораллы и море', s:'Кораллы', i:'Коралловые блоки, кораллы и веерные кораллы (живые и мёртвые), ламинария, морская трава, морские огурцы, кувшинки'},
+      R(),
+      {n:'Урожай и семена', s:'Урожай, семена', i:'Семена пшеницы, свёклы, тыквы, арбуза и факельника, стручки растения-кувшина; пшеница, сахарный тростник, кактусы, какао-бобы, пчелиные соты, ульи и пчелиные гнёзда'},
+      {n:'Тыквы, арбузы, сено', s:'Тыквы, арбузы', i:'Тыквы, вырезанные тыквы, арбузы, снопы сена, блоки сушёной ламинарии, блоки сот'},
+      {n:'Цветы', s:'Цветы', i:'Все одиночные и высокие цветы, факельник, растение-кувшин, глазоцвет, розовые лепестки, полевые цветы, цветки кактуса'},
+      {n:'Травы, мох, грибы', s:'Травы, грибы', i:'Трава, папоротники, кусты и мёртвые кусты, сухая трава, кусты светлячков, лианы, светящийся лишайник, мох и моховые ковры, бледный мох, висячие корни, спороцвет, каплелисты, грибы и грибные блоки, черепашьи яйца'},
+      {n:'Саженцы и листва', s:'Саженцы', i:'Саженцы всех деревьев, азалии, ростки мангрового дерева, листва всех видов, опавшие листья'},
+      R()
+     ]},
+    {id:'B4', code:'Б4', group:'B', kind:'wall', title:'Незер и Энд', short:'Незер и Энд',
+     pos:'Коридор Б, стена, секция 4 (дальняя)',
+     note:'Незерак по два сундука, как булыжник. Дерево Незера лежит на острове (О2).',
+     chests:[
+      {n:'Энд', s:'Энд', i:'Эндерняк, кирпичи из эндерняка, пурпурные блоки и колонны со ступенями и плитами, плоды хоруса, лопнувший хорус, цветы хоруса, кристаллы Края', kw:'край эндер'},
+      R(),
+      {n:'Незерак', s:'Незерак', i:'Незерак'},
+      {n:'Незерак №2', s:'Незерак 2', i:'Незерак (продолжение), багровый и искажённый нилий'},
+      {n:'Незерские кирпичи', s:'Незер. кирпичи', i:'Незерские кирпичи (предмет и блоки), красные, потрескавшиеся и резные; ступени, плиты, стены, заборы'},
+      {n:'Чернокамень', s:'Чернокамень', i:'Чернокамень: обычный, полированный, кирпичи, резной, позолоченный; ступени, плиты, стены'},
+      {n:'Базальт, души, магма', s:'Базальт, души', i:'Базальт (обычный, гладкий, полированный), песок душ, почва душ, магмовые блоки'},
+      {n:'Растения Незера', s:'Флора Незера', i:'Блоки незерского нароста (красные и искажённые), грибы, корни, плакучие и вьющиеся лозы, ростки Незера, грибосвет'}
+     ]},
+    {id:'O3', code:'О3', group:'B', kind:'island', title:'Еда', short:'Еда',
+     pos:'Остров, сторона коридора Б, ближняя ко входу секция',
+     note:'Еда ближе к выходу, чтобы брать её по пути.',
+     chests:[
+      {n:'Выпечка и продукты', s:'Выпечка', i:'Торты, тыквенные пироги, печенье, бутылочки мёда, сахар, яйца (все три вида)'},
+      {n:'Готовая еда', s:'Готовая еда', i:'Жареное мясо и рыба, хлеб, печёный картофель, золотая морковь, грибной суп, борщ, тушёный кролик, загадочное рагу'},
+      {n:'Сырое мясо и рыба', s:'Сырое мясо', i:'Сырые говядина, свинина, курица, баранина, крольчатина, треска и лосось; тропическая рыба, иглобрюх'},
+      {n:'Овощи и фрукты', s:'Овощи, фрукты', i:'Морковь, картофель (и ядовитый), свёкла, яблоки, сладкие и светящиеся ягоды, ломтики арбуза, сушёная ламинария'}
+     ]},
+    {id:'O4', code:'О4', group:'B', kind:'island', title:'Редстоун', short:'Редстоун',
+     pos:'Остров, сторона коридора Б, дальняя секция',
+     note:'Пыль, механизмы, рельсы и датчики. Деревянные кнопки и плиты лежат со своим деревом.',
+     chests:[
+      {n:'Рельсы и вагонетки', s:'Рельсы', i:'Рельсы, энергорельсы, нажимные и активирующие рельсы; вагонетки: обычные, с сундуком, воронкой, печью, динамитом'},
+      {n:'Редстоун', s:'Редстоун', i:'Редстоун-пыль, блоки и руда редстоуна, редстоун-факелы, повторители, компараторы', kw:'красная пыль'},
+      {n:'Механизмы', s:'Механизмы', i:'Поршни и липкие поршни, наблюдатели, раздатчики, выбрасыватели, воронки, крафтеры, сундуки-ловушки, блоки слизи и мёда'},
+      {n:'Датчики и скалк', s:'Датчики', i:'Рычаги, каменные и металлические кнопки и нажимные плиты, крюки для растяжек, датчики дневного света, лампы, мишени, нотные блоки; скалк, датчики скалка, катализаторы, крикуны'}
+     ]},
+
+    {id:'V1', code:'В1', group:'V', kind:'upper', title:'Руды и слитки', short:'Руды',
+     pos:'2 этаж, секция 1',
+     note:'Уже подписана рамками. Сюда же кладутся руды, добытые шёлковым касанием, и блоки из слитков.',
+     chests:[
+      {n:'Алмазы', s:'Алмазы', f:'алмаз', i:'Алмазы, алмазные блоки, алмазная руда'},
+      {n:'Золото', s:'Золото', f:'золотой слиток', i:'Слитки, самородки, блоки, сырое золото и его блоки, золотая руда (обычная, глубинная, незерская)'},
+      {n:'Железо', s:'Железо', f:'железный слиток', i:'Слитки, самородки, блоки, сырое железо и его блоки, железная руда'},
+      {n:'Медь', s:'Медь', f:'медный слиток', i:'Медные слитки, сырая медь и её блоки, медная руда. Строительная медь внизу, в А4-1'},
+      {n:'Лазурит', s:'Лазурит', f:'лазурит', i:'Лазурит, лазуритовые блоки и руда'},
+      {n:'Уголь', s:'Уголь', f:'уголь', i:'Уголь, древесный уголь, угольные блоки и руда'}
+     ]},
+    {id:'V2', code:'В2', group:'V', kind:'upper', title:'Наборы маяков', short:'Маяки',
+     pos:'2 этаж, секция 2',
+     note:'Полная пирамида в 4 уровня: 9 + 25 + 49 + 81 = 164 блока, это 2 стака и 36 штук. Годятся железо, золото, изумруды, алмазы или незерит, можно вперемешку.',
+     chests:[1,2,3,4,5,6].map(k => ({n:'Маяк №' + k, s:'Маяк ' + k, f:'маяк', i:'Маяк и 164 блока на пирамиду (64 + 64 + 36)'}))},
+    {id:'V3', code:'В3', group:'V', kind:'upper', title:'Редкие материалы и чары', short:'Ценное',
+     pos:'2 этаж, секция 3',
+     note:'Зачарованные книги не складываются, поэтому им два сундука: 54 места.',
+     chests:[
+      {n:'Изумруды', s:'Изумруды', f:'изумруд', i:'Изумруды, изумрудные блоки и руда'},
+      {n:'Незерит', s:'Незерит', f:'незеритовый слиток', i:'Незеритовые слитки и блоки, незеритовый лом, древние обломки'},
+      {n:'Кузнечные шаблоны', s:'Шаблоны', f:'шаблон улучшения', i:'Шаблоны незеритового улучшения и все шаблоны отделки брони'},
+      {n:'Книги: броня и оружие', s:'Чар. книги\nБроня, оружие', f:'зачарованная книга', i:'Зачарованные книги на броню, мечи, луки, арбалеты, трезубцы и булаву'},
+      {n:'Книги: инструменты', s:'Чар. книги\nИнструменты', f:'зачарованная книга', i:'Зачарованные книги на инструменты и все остальные: починка, прочность, удача и т.д.'},
+      {n:'Тотемы и яблоки', s:'Тотемы, яблоки', f:'тотем бессмертия', i:'Тотемы бессмертия, золотые и зачарованные золотые яблоки, пузырьки опыта'}
+     ]},
+    {id:'V4', code:'В4', group:'V', kind:'upper', title:'Трофеи и уникальное', short:'Трофеи',
+     pos:'2 этаж, секция 4',
+     note:'Вещи, которые добываются один раз или с боссов.',
+     chests:[
+      {n:'Элитры и редкое оружие', s:'Элитры', f:'элитры', i:'Элитры, трезубцы, булава, тяжёлое ядро'},
+      {n:'Шалкеры', s:'Шалкеры', f:'шалкеровый ящик', i:'Шалкеровые ящики и панцири шалкеров'},
+      {n:'Звёзды и головы', s:'Звёзды, головы', f:'звезда Незера', i:'Звёзды Незера, запасные маяки, головы мобов и игроков, яйцо дракона'},
+      {n:'Сокровища моря', s:'Сердце моря', f:'сердце моря', i:'Сердца моря, морские источники (проводники), раковины наутилуса, осколки эха, компасы восстановления'},
+      {n:'Ключи и пластинки', s:'Ключи, диски', f:'ключ испытаний', i:'Ключи испытаний (и зловещие), пластинки и их фрагменты, узоры флагов, козьи рога'},
+      R()
+     ]}
+  ];
+
+  const GROUPS = [
+    {key:'A', title:'Коридор А', sub:'Строительные блоки. Стена из четырёх секций по 8 двойных сундуков (2 в ширину, 4 в высоту) и две секции острова по 4.'},
+    {key:'B', title:'Коридор Б', sub:'Снаряжение, материалы, природа, блоки Незера и Энда. На острове еда и редстоун.'},
+    {key:'V', title:'Второй этаж', sub:'24 одиночных сундука по 27 слотов: по 12 вдоль каждой стены, в секциях по 6. Над каждым сундуком рамка с предметом.'}
+  ];
+
+  const ROWS_WALL = ['верхний ряд', '2-й ряд сверху', '3-й ряд сверху', 'нижний ряд'];
+  const ROWS_ISLAND = ['верхний', '2-й сверху', '3-й сверху', 'нижний'];
+  const norm = s => s.toLowerCase().replace(/ё/g, 'е');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function place(sec, i){
+    if (sec.kind === 'wall') return sec.pos + ', ' + ROWS_WALL[Math.floor(i / 2)] + ', ' + (i % 2 ? 'справа' : 'слева');
+    if (sec.kind === 'island') return sec.pos + ', ' + ROWS_ISLAND[i];
+    return sec.pos + ', ' + (i + 1) + '-й слева';
+  }
+
+  // index
+  const ALL = [];
+  SECTIONS.forEach(sec => sec.chests.forEach((c, i) => {
+    c.code = sec.code + '-' + (i + 1);
+    c.dom = 'c-' + sec.id + '-' + (i + 1);
+    c.sec = sec;
+    c.place = place(sec, i);
+    if (c.spare) { c.n = 'Резерв'; c.s = 'Резерв'; c.i = 'Пусто. Под новую категорию или переполнение соседнего сундука.'; }
+    c.text = norm([c.n, c.s, c.i, c.kw || '', c.f || '', c.spare ? 'пусто свободный' : ''].join(' '));
+    ALL.push(c);
+  }));
+
+  // plans
+  const f1 = document.getElementById('floor1');
+  const f2 = document.getElementById('floor2');
+  const PLAN1 = {A1:[1,2], A2:[1,3], A3:[1,4], A4:[1,5], O1:[3,3], O2:[3,4], O3:[4,3], O4:[4,4], B1:[6,2], B2:[6,3], B3:[6,4], B4:[6,5]};
+  const PLAN2 = {V1:[1,1], V2:[1,2], V3:[3,1], V4:[3,2]};
+  SECTIONS.forEach(sec => {
+    const p = PLAN1[sec.id] || PLAN2[sec.id];
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tile' + (sec.id === 'O1' ? ' spare' : '');
+    b.id = 't-' + sec.id;
+    b.style.gridRow = p[0];
+    b.style.gridColumn = p[1];
+    b.innerHTML = '<span class="c">' + sec.code + '</span><span class="t">' + esc(sec.short) + '</span><span class="n"></span>';
+    b.title = sec.title;
+    b.addEventListener('click', () => go(document.getElementById('sec-' + sec.id), 'start'));
+    (PLAN1[sec.id] ? f1 : f2).appendChild(b);
+  });
+
+  // sections
+  const groupsEl = document.getElementById('groups');
+  GROUPS.forEach(g => {
+    const wrap = document.createElement('section');
+    wrap.className = 'group';
+    wrap.innerHTML = '<div class="group-h"><h2>' + g.title + '</h2><p>' + esc(g.sub) + '</p></div><div class="sections"></div>';
+    const list = wrap.querySelector('.sections');
+    SECTIONS.filter(s => s.group === g.key).forEach(sec => {
+      const el = document.createElement('article');
+      el.className = 'sec' + (sec.kind === 'upper' ? ' wide' : '');
+      el.id = 'sec-' + sec.id;
+      const gridCls = sec.kind === 'wall' ? 'grid' : sec.kind === 'island' ? 'grid one' : 'grid six';
+      el.innerHTML =
+        '<div class="sec-h"><span class="badge">' + sec.code + '</span><div><h3>' + esc(sec.title) + '</h3><div class="where">' + esc(sec.pos) + '</div></div></div>' +
+        (sec.note ? '<p class="note">' + esc(sec.note) + '</p>' : '') +
+        '<div class="' + gridCls + '">' + sec.chests.map(c =>
+          '<div class="chest' + (c.spare ? ' spare' : '') + (c.inbox ? ' inbox' : '') + '" id="' + c.dom + '" title="' + esc(c.place) + '">' +
+            '<div class="top"><span class="sign">' + esc(c.s) + '</span><span class="code">' + c.code + '</span></div>' +
+            '<p class="items">' + esc(c.i) + '</p>' +
+            (c.f ? '<div class="frame">рамка: ' + esc(c.f) + '</div>' : '') +
+          '</div>').join('') + '</div>';
+      list.appendChild(el);
+    });
+    groupsEl.appendChild(wrap);
+  });
+
+  // search
+  const q = document.getElementById('q');
+  const clearBtn = document.getElementById('clear');
+  const results = document.getElementById('results');
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function go(el, block){
+    if (!el) return;
+    el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: block || 'center'});
+  }
+  function flash(el){
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  }
+  function stem(w){
+    let n = 0;
+    while (n < 2 && w.length > 3 && /[аеиоуыэюяйь]$/.test(w)) { w = w.slice(0, -1); n++; }
+    return w;
+  }
+
+  function run(){
+    const raw = q.value.trim();
+    const words = norm(raw).split(/[\s,.;]+/).filter(w => w.length > 1).map(stem);
+    clearBtn.hidden = !raw;
+    document.querySelectorAll('.chest.hit').forEach(e => e.classList.remove('hit'));
+    document.querySelectorAll('.sec.has-hit').forEach(e => e.classList.remove('has-hit'));
+    document.querySelectorAll('.tile').forEach(t => { t.classList.remove('hit'); t.querySelector('.n').textContent = ''; });
+    if (!words.length) { SCOPE.classList.remove('searching'); results.innerHTML = ''; return; }
+    SCOPE.classList.add('searching');
+    const hits = ALL.filter(c => !c.spare || words.some(w => 'резерв пусто'.includes(w))).filter(c => words.every(w => c.text.includes(w)));
+    const counts = {};
+    hits.forEach(c => {
+      document.getElementById(c.dom).classList.add('hit');
+      document.getElementById('sec-' + c.sec.id).classList.add('has-hit');
+      counts[c.sec.id] = (counts[c.sec.id] || 0) + 1;
+    });
+    Object.keys(counts).forEach(id => {
+      const t = document.getElementById('t-' + id);
+      t.classList.add('hit');
+      t.querySelector('.n').textContent = counts[id];
+    });
+    if (!hits.length) {
+      results.innerHTML = '<span class="rnote">Ничего не нашлось. Попробуй другое слово, а если предмета нет в списке, клади его в <b>Сброс</b> (О1-2).</span>';
+      return;
+    }
+    const shown = hits.slice(0, 8);
+    results.innerHTML = '<span class="rnote">' + (hits.length === 1 ? 'Один сундук:' : 'Сундуков: ' + hits.length) + '</span>' +
+      shown.map(c => '<button type="button" class="result" data-dom="' + c.dom + '" title="' + esc(c.place) + '"><code>' + c.code + '</code>' + esc(c.n) + '</button>').join('') +
+      (hits.length > shown.length ? '<span class="rnote">и ещё ' + (hits.length - shown.length) + ' ниже</span>' : '');
+  }
+
+  results.addEventListener('click', e => {
+    const b = e.target.closest('.result');
+    if (!b) return;
+    const el = document.getElementById(b.dataset.dom);
+    go(el); flash(el);
+  });
+  q.addEventListener('input', run);
+  q.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const first = results.querySelector('.result'); if (first) first.click(); }
+    if (e.key === 'Escape') { q.value = ''; run(); }
+  });
+  clearBtn.addEventListener('click', () => { q.value = ''; run(); q.focus(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== q && !document.getElementById('view-storage').hidden) { e.preventDefault(); q.focus(); }
+  });
+  run();
+})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+  var SCOPE = document.querySelector("#view-village .wrap");
+  var R = ["", "I", "II", "III", "IV", "V"];
+
+  /* ---------- Enchantments ---------- */
+  /* m = множитель цены книги (цена = уровень × m) */
+  var E = {
+    mending:        {n:"Починка", max:1, m:2, t:true, use:"всё"},
+    unbreaking:     {n:"Прочность", max:3, m:1, use:"всё"},
+    efficiency:     {n:"Эффективность", max:5, m:1, use:"кирка, топор, лопата, мотыга, ножницы"},
+    fortune:        {n:"Удача", max:3, m:2, use:"кирка, топор, лопата, мотыга · не с Шёлковым касанием"},
+    silk_touch:     {n:"Шёлковое касание", max:1, m:4, use:"кирка, топор, лопата, мотыга · не с Удачей"},
+    protection:     {n:"Защита", max:4, m:1, use:"вся броня"},
+    thorns:         {n:"Шипы", max:3, m:4, use:"вся броня"},
+    feather_falling:{n:"Невесомость", max:4, m:1, use:"ботинки"},
+    frost_walker:   {n:"Ледоход", max:2, m:2, t:true, use:"ботинки · не с Подводной ходьбой"},
+    sharpness:      {n:"Острота", max:5, m:1, use:"меч, топор"},
+    smite:          {n:"Небесная кара", max:5, m:1, use:"меч, топор, булава · не с Остротой"},
+    looting:        {n:"Добыча", max:3, m:2, use:"меч"},
+    fire_aspect:    {n:"Заговор огня", max:2, m:2, use:"меч, булава"},
+    knockback:      {n:"Отдача", max:2, m:1, use:"меч"},
+    sweeping_edge:  {n:"Разящий клинок", max:3, m:2, use:"меч · только Java"},
+    power:          {n:"Сила", max:5, m:1, use:"лук"},
+    punch:          {n:"Откидывание", max:2, m:2, use:"лук"},
+    flame:          {n:"Воспламенение", max:1, m:2, use:"лук"},
+    infinity:       {n:"Бесконечность", max:1, m:4, use:"лук · не с Починкой"},
+    quick_charge:   {n:"Быстрая перезарядка", max:3, m:1, use:"арбалет"},
+    piercing:       {n:"Пронзающая стрела", max:4, m:1, use:"арбалет · не с Тройным выстрелом"},
+    multishot:      {n:"Тройной выстрел", max:1, m:2, use:"арбалет · не с Пронзающей стрелой"},
+    loyalty:        {n:"Верность", max:3, m:1, use:"трезубец · не с Тягуном"},
+    impaling:       {n:"Пронзатель", max:5, m:2, use:"трезубец"},
+    riptide:        {n:"Тягун", max:3, m:2, use:"трезубец · не с Верностью и Громовержцем"},
+    channeling:     {n:"Громовержец", max:1, m:4, use:"трезубец · не с Тягуном"},
+    luck_of_the_sea:{n:"Везучий рыбак", max:3, m:2, use:"удочка"},
+    lure:           {n:"Приманка", max:3, m:2, use:"удочка"},
+    density:        {n:"Плотность", max:5, m:1, use:"булава · не с Пробитием"},
+    breach:         {n:"Пробитие", max:4, m:2, use:"булава · не с Плотностью"},
+    depth_strider:  {n:"Подводная ходьба", max:3, m:2, use:"ботинки · не с Ледоходом"},
+    respiration:    {n:"Подводное дыхание", max:3, m:2, use:"шлем"},
+    aqua_affinity:  {n:"Подводник", max:1, m:2, use:"шлем"}
+  };
+  /* Книги, которых у библиотекарей нет */
+  var X = {
+    swift_sneak:    {n:"Проворство", max:3, m:4, src:"сундуки древнего города"},
+    soul_speed:     {n:"Скорость души", max:3, m:4, src:"обмен с пиглинами, бастион"},
+    wind_burst:     {n:"Взрыв ветра", max:3, m:2, src:"зловещий сейф пробных палат"}
+  };
+  function ench(id){ return E[id] || X[id]; }
+
+  var H = [
+    ["mending","unbreaking","efficiency","fortune","silk_touch"],
+    ["protection","thorns","feather_falling","frost_walker"],
+    ["sharpness","smite","looting","fire_aspect","knockback","sweeping_edge"],
+    ["power","punch","flame","infinity","quick_charge","piercing","multishot"],
+    ["loyalty","impaling","riptide","channeling","luck_of_the_sea","lure"],
+    ["density","breach"],
+    ["depth_strider","respiration","aqua_affinity"]
+  ];
+
+  /* ---------- Kits ---------- */
+  var KITS = [
+    {id:"sword", n:"Меч", icon:"sword", base:["sweeping_edge","fire_aspect","looting","unbreaking","mending"],
+     opts:[{id:"dmg",kind:"pick",label:"Урон",choices:[["sharpness","Острота"],["smite","Небесная кара"]],def:"sharpness"},
+           {id:"kb",kind:"toggle",ench:"knockback",label:"Отдача",def:false}]},
+    {id:"axe", n:"Топор", icon:"axe", base:["efficiency","unbreaking","mending"],
+     opts:[{id:"dmg",kind:"pick",label:"Урон",choices:[["sharpness","Острота"],["smite","Небесная кара"]],def:"sharpness"},
+           {id:"dig",kind:"pick",label:"Добыча",choices:[["fortune","Удача"],["silk_touch","Шёлковое касание"]],def:"fortune"}]},
+    {id:"pickaxe", n:"Кирка", icon:"pickaxe", base:["efficiency","unbreaking","mending"],
+     opts:[{id:"dig",kind:"pick",label:"Добыча",choices:[["fortune","Удача"],["silk_touch","Шёлковое касание"]],def:"fortune"}]},
+    {id:"shovel", n:"Лопата", icon:"shovel", base:["efficiency","unbreaking","mending"],
+     opts:[{id:"dig",kind:"pick",label:"Добыча",choices:[["silk_touch","Шёлковое касание"],["fortune","Удача"]],def:"silk_touch"}]},
+    {id:"helmet", n:"Шлем", icon:"helmet", base:["protection","respiration","aqua_affinity","unbreaking","mending"],
+     opts:[{id:"th",kind:"toggle",ench:"thorns",label:"Шипы",def:false}]},
+    {id:"chestplate", n:"Нагрудник", icon:"chestplate", base:["protection","unbreaking","mending"],
+     opts:[{id:"th",kind:"toggle",ench:"thorns",label:"Шипы",def:false}]},
+    {id:"leggings", n:"Поножи", icon:"leggings", base:["protection","unbreaking","mending"],
+     opts:[{id:"ss",kind:"toggle",ench:"swift_sneak",label:"Проворство",def:true},
+           {id:"th",kind:"toggle",ench:"thorns",label:"Шипы",def:false}]},
+    {id:"boots", n:"Ботинки", icon:"boots", base:["protection","feather_falling","unbreaking","mending"],
+     opts:[{id:"walk",kind:"pick",label:"Вода",choices:[["depth_strider","Подводная ходьба"],["frost_walker","Ледоход"]],def:"depth_strider"},
+           {id:"sp",kind:"toggle",ench:"soul_speed",label:"Скорость души",def:true},
+           {id:"th",kind:"toggle",ench:"thorns",label:"Шипы",def:false}]},
+    {id:"bow", n:"Лук", icon:"bow", base:["power","punch","flame","unbreaking"],
+     opts:[{id:"fin",kind:"pick",label:"Стрелы",choices:[["mending","Починка"],["infinity","Бесконечность"]],def:"mending"}]},
+    {id:"crossbow", n:"Арбалет", icon:"crossbow", base:["quick_charge","unbreaking","mending"],
+     opts:[{id:"sh",kind:"pick",label:"Выстрел",choices:[["piercing","Пронзающая стрела"],["multishot","Тройной выстрел"]],def:"piercing"}]},
+    {id:"trident", n:"Трезубец", icon:"trident", base:["impaling","unbreaking","mending"],
+     opts:[{id:"ret",kind:"pick",label:"Полёт",choices:[["loyalty","Верность"],["riptide","Тягун"]],def:"loyalty"},
+           {id:"ch",kind:"toggle",ench:"channeling",label:"Громовержец",def:true}]},
+    {id:"rod", n:"Удочка", icon:"rod", base:["luck_of_the_sea","lure","unbreaking","mending"], opts:[]},
+    {id:"mace", n:"Булава", icon:"mace", base:["smite","fire_aspect","unbreaking","mending"],
+     opts:[{id:"crush",kind:"pick",label:"Удар",choices:[["density","Плотность"],["breach","Пробитие"]],def:"density"},
+           {id:"wb",kind:"toggle",ench:"wind_burst",label:"Взрыв ветра",def:true}]},
+    {id:"elytra", n:"Элитры", icon:"elytra", base:["unbreaking","mending"], opts:[]},
+    {id:"shears", n:"Ножницы", icon:"shears", base:["efficiency","unbreaking","mending"],
+     opts:[{id:"silk",kind:"toggle",ench:"silk_touch",label:"Шёлковое касание",def:true}]},
+    {id:"flint", n:"Огниво", icon:"flint", base:["unbreaking","mending"], opts:[]},
+    {id:"shield", n:"Щит", icon:"shield", base:["unbreaking","mending"], opts:[]}
+  ];
+
+  /* ---------- Icons ---------- */
+  function svg(inner){ return '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="currentColor">' + inner + '</g></svg>'; }
+  function tool(inner){
+    return '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="currentColor" transform="rotate(45 8 8)">' + inner + '</g></svg>';
+  }
+  var ICONS = {
+    sword: tool('<rect x="6.6" y="0" width="2.8" height="9.2" opacity=".55"/><rect x="6.6" y="0" width="1.4" height="9.2"/><rect x="3.5" y="9.2" width="9" height="2"/><rect x="6.9" y="11.2" width="2.2" height="5.8" opacity=".55"/>'),
+    axe: tool('<rect x="7.1" y="1" width="2.2" height="16.4" opacity=".55"/><path d="M10.2.4v6.8H6.6C4.7 7.2 3.3 5.7 3.3 4S4.7.4 6.6.4z"/><rect x="9.1" y="0.4" width="1.6" height="6.8"/>'),
+    pickaxe: tool('<rect x="7" y="4" width="2.2" height="13.4" opacity=".55"/><path d="M3.4 6.6C4.6 3.4 11.4 3.4 12.6 6.6l-2 .9C9.6 5.6 6.4 5.6 5.4 7.5z"/>'),
+    shovel: tool('<rect x="7.1" y="5.5" width="2.2" height="12" opacity=".55"/><path d="M5 .5h6v4.8L9.5 7.4h-3L5 5.3z"/>'),
+    helmet: svg('<path d="M2.6 7.6a5.4 5.4 0 0 1 10.8 0V13h-3.2V9.6H5.8V13H2.6z"/><rect x="5.8" y="7.4" width="4.4" height="1.6" opacity=".45"/>'),
+    chestplate: svg('<path d="M4.4 2.6h2.4L8 3.9l1.2-1.3h2.4L13.2 6v7.4H2.8V6z"/><rect x="6.8" y="6" width="2.4" height="5" opacity=".4"/>'),
+    leggings: svg('<path d="M3.4 2.6h9.2l-.6 3.6-.9 7.2H9L8 7.8 7 13.4H4.9L4 6.2z"/><rect x="6.9" y="2.6" width="2.2" height="3.4" opacity=".4"/>'),
+    boots: svg('<path d="M2.4 2.2h4.4v5.6h2.9l3.9 3.1v2.9H2.4z"/><rect x="2.4" y="11.4" width="11.2" height="2.4" opacity=".45"/>'),
+    bow: svg('<path d="M4.4 1.6C10 3 13 5.3 13 8s-3 5-8.6 6.4l-.5-1.7C8.6 11.6 11 9.8 11 8S8.6 4.4 3.9 3.3z"/><rect x="3.4" y="1.6" width="1.3" height="12.8" opacity=".5"/>'),
+    crossbow: svg('<rect x="7.2" y="4" width="1.6" height="10" opacity=".55"/><path d="M2 3.2h1.8v4.4h8.4V3.2H14v6.4H2z"/>'),
+    trident: svg('<rect x="7.2" y="4" width="1.6" height="10.4" opacity=".55"/><path d="M2.4 1.4h1.8v4.2h2.9V1.4h1.8v4.2h2.9V1.4h1.8v6H2.4z"/>'),
+    rod: svg('<path d="M1.8 13.2 11.4 3.6l1.3 1.3-9.6 9.6z" opacity=".55"/><rect x="10.6" y="1.4" width="4" height="1.5"/><path d="M12.6 5.2h1.4v4.2a2.6 2.6 0 0 1-5.2 0h1.4a1.2 1.2 0 0 0 2.4 0z"/>'),
+    mace: svg('<rect x="7.1" y="6" width="1.9" height="9.4" opacity=".55"/><path d="M3.8.6h8.4v5.2H3.8z"/><rect x="5.4" y="5.8" width="5.2" height="1.8"/>'),
+    elytra: svg('<path d="M7.2 1.8v6.6L5.6 14.6C3 14 1 11 1 7.2z"/><path d="M8.8 1.8v6.6l1.6 6.2C13 14 15 11 15 7.2z" opacity=".55"/>'),
+    shears: svg('<path d="M2.6.8 8.8 8.4 7.2 10.4 1 2.8z"/><path d="M13.4.8 7.2 8.4l1.6 2L15 2.8z" opacity=".55"/><circle cx="4.3" cy="12.8" r="2.4"/><circle cx="11.7" cy="12.8" r="2.4" opacity=".55"/>'),
+    flint: svg('<path d="M2 9.4C2 6.6 4.2 4.4 7 4.4h1.6V7H7c-1.3 0-2.4 1.1-2.4 2.4S5.7 11.8 7 11.8h2.6v2.6H7c-2.8 0-5-2.2-5-5z"/><path d="M10.6 1.4 15 3.2v4.6l-3.2 2.2-2.8-2.6z" opacity=".55"/>'),
+    shield: svg('<path d="M8 .8 2 2.7v5.5c0 3.2 2.5 5.6 6 7z"/><path d="M8 .8 14 2.7v5.5c0 3.2-2.5 5.6-6 7z" opacity=".55"/>')
+  };
+  var EMERALD = '<svg viewBox="0 0 8 8" width="12" height="12" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 0h2v1h1v1h1v4H6v1H5v1H3V7H2V6H1V2h1V1h1z"/></svg>';
+  var CHEV = '<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 3l5 5-5 5"/></svg>';
+
+  var LS = "library-village-v1", LSF = "library-village-filter", LSK = "library-village-kits";
+
+  /* ---------- Price helpers ---------- */
+  function pmin(L, t){ return (2 + 3*L) * (t ? 2 : 1); }
+  function pmax(L, t){ return Math.min(64, (6 + 13*L) * (t ? 2 : 1)); }
+  function word(n, a, b, c){ var x = n % 10, y = n % 100; if (y >= 11 && y <= 14) return c; if (x === 1) return a; if (x >= 2 && x <= 4) return b; return c; }
+  function booksWord(n){ return word(n, "книга", "книги", "книг"); }
+  function lvlWord(n){ return word(n, "уровень", "уровня", "уровней"); }
+  function clean(x, id){
+    var max = E[id].max, level = parseInt(x && x.level, 10);
+    if (!(level >= 1 && level <= max)) level = max;
+    var price = (x && x.price != null && x.price !== "") ? Number(x.price) : null;
+    if (!(isFinite(price) && price > 0)) price = null; else price = Math.round(price);
+    return {done: !!(x && x.done), price: price, level: level};
+  }
+  function isDefault(s, id){ return !s.done && s.price == null && s.level === E[id].max; }
+
+  /* ---------- State ---------- */
+  var state = {v:{}, h:{}, k:{}};
+  Object.keys(E).forEach(function(id){ state.v[id] = {done:false, price:null, level:E[id].max}; });
+  H.forEach(function(_, i){ state.h[i+1] = {built:false}; });
+  KITS.forEach(function(k){
+    var o = {};
+    k.opts.forEach(function(op){ o[op.id] = op.kind === "pick" ? op.def : !!op.def; });
+    state.k[k.id] = {opts:o, steps:{}};
+  });
+  function cleanKit(kit, x){
+    var o = {}, st = {};
+    kit.opts.forEach(function(op){
+      var v = x && x.opts ? x.opts[op.id] : undefined;
+      if (op.kind === "pick") o[op.id] = op.choices.some(function(c){ return c[0] === v; }) ? v : op.def;
+      else o[op.id] = v == null ? !!op.def : !!v;
+    });
+    var arr = x && x.steps;
+    if (Array.isArray(arr)) arr.forEach(function(s){ if (typeof s === "string") st[s] = true; });
+    else if (arr && typeof arr === "object") Object.keys(arr).forEach(function(s){ if (arr[s]) st[s] = true; });
+    return {opts:o, steps:st};
+  }
+  try {
+    var raw = localStorage.getItem(LS);
+    if (raw) {
+      var saved = JSON.parse(raw);
+      if (saved && saved.v) Object.keys(saved.v).forEach(function(id){ if (E[id]) state.v[id] = clean(saved.v[id], id); });
+      if (saved && saved.h) Object.keys(saved.h).forEach(function(n){ if (state.h[n]) state.h[n].built = !!saved.h[n].built; });
+    }
+    var rawK = localStorage.getItem(LSK);
+    if (rawK) {
+      var sk = JSON.parse(rawK);
+      if (sk) KITS.forEach(function(k){ if (sk[k.id]) state.k[k.id] = cleanKit(k, sk[k.id]); });
+    }
+  } catch (e) {}
+  function saveLocal(){
+    try {
+      localStorage.setItem(LS, JSON.stringify({v:state.v, h:state.h}));
+      localStorage.setItem(LSK, JSON.stringify(state.k));
+    } catch (e) {}
+  }
+
+  /* ---------- Anvil planner ---------- */
+  function pen(p){ return Math.pow(2, p) - 1; }
+
+  function buildBook(id, L, M){
+    var e = ench(id), steps = [], total = 0, k = M - L;
+    for (var j = 1; j <= k; j++){
+      var pr = pen(j-1), c = (L+j) * e.m + 2*pr, n = Math.pow(2, k-j);
+      steps.push({kind:"dbl", id:id, from:L+j-1, to:L+j, cost:c, count:n, over:c >= 40});
+      total += n * c;
+    }
+    return {steps:steps, cost:total, prior:k, books:Math.pow(2, k)};
+  }
+
+  function pareto(list){
+    list.sort(function(a,b){ return a.cost - b.cost || a.prior - b.prior; });
+    var out = [], bp = Infinity;
+    for (var i = 0; i < list.length; i++) if (list[i].prior < bp){ out.push(list[i]); bp = list[i].prior; }
+    return out;
+  }
+
+  function plan(ids, levelOf){
+    var N = ids.length;
+    if (!N) return null;
+    var full = (1 << N) - 1, i, S;
+    var leaf = ids.map(function(id){
+      var e = ench(id), av = Math.min(levelOf(id), e.max);
+      return {id:id, e:e, avail:av, build:buildBook(id, av, e.max)};
+    });
+    var bit = {}; for (i = 0; i < N; i++) bit[1 << i] = i;
+    var esum = new Array(1 << N); esum[0] = 0;
+    for (S = 1; S <= full; S++){ var lo = S & -S; esum[S] = esum[S ^ lo] + leaf[bit[lo]].e.max * leaf[bit[lo]].e.m; }
+
+    var best = new Array(1 << N);
+    for (i = 0; i < N; i++) best[1 << i] = [{prior:leaf[i].build.prior, cost:leaf[i].build.cost, leaf:i}];
+    for (S = 1; S <= full; S++){
+      if (!(S & (S-1))) continue;
+      var opts = [];
+      for (var A = (S-1) & S; A > 0; A = (A-1) & S){
+        var B = S ^ A, la = best[A], lb = best[B];
+        if (!la || !lb || !la.length || !lb.length) continue;
+        for (var x = 0; x < la.length; x++) for (var y = 0; y < lb.length; y++){
+          var op = pen(la[x].prior) + pen(lb[y].prior) + esum[B];
+          if (op >= 40) continue;
+          opts.push({prior:Math.max(la[x].prior, lb[y].prior) + 1, cost:la[x].cost + lb[y].cost + op, A:A, B:B, ax:x, by:y, op:op});
+        }
+      }
+      best[S] = pareto(opts);
+    }
+
+    var f = new Array(1 << N); f[0] = [{prior:0, cost:0}];
+    for (S = 0; S <= full; S++){
+      if (!f[S] || !f[S].length) continue;
+      f[S] = pareto(f[S]);
+      var rest = full ^ S;
+      if (!rest) continue;
+      for (var G = rest; G > 0; G = (G-1) & rest){
+        var lg = best[G];
+        if (!lg || !lg.length) continue;
+        for (var si = 0; si < f[S].length; si++){
+          var st = f[S][si];
+          for (var gi = 0; gi < lg.length; gi++){
+            var o2 = pen(st.prior) + pen(lg[gi].prior) + esum[G];
+            if (o2 >= 40) continue;
+            var NS = S | G;
+            f[NS] = f[NS] || [];
+            f[NS].push({prior:st.prior + 1, cost:st.cost + lg[gi].cost + o2, G:G, gi:gi, from:S, fi:si, op:o2});
+          }
+        }
+      }
+    }
+    if (!f[full] || !f[full].length) return null;
+    f[full] = pareto(f[full]);
+    var end = f[full][0];
+
+    var applies = [], cur = end;
+    while (cur && cur.G != null){ applies.unshift(cur); cur = f[cur.from][cur.fi]; }
+
+    function names(mask){
+      var out = [];
+      for (var b = 1; b <= mask; b <<= 1) if (mask & b){ var l = leaf[bit[b]]; out.push(l.e.n + (l.e.max > 1 ? " " + R[l.e.max] : "")); }
+      return out;
+    }
+    function idList(mask){
+      var out = [];
+      for (var b = 1; b <= mask; b <<= 1) if (mask & b) out.push(leaf[bit[b]].id);
+      return out;
+    }
+    function key(mask){ return idList(mask).sort().join(","); }
+
+    var merges = [];
+    function expand(S2, idx){
+      var o = best[S2][idx];
+      if (o.leaf != null) return;
+      expand(o.A, o.ax); expand(o.B, o.by);
+      merges.push({kind:"merge", a:names(o.A), b:names(o.B), ids:idList(o.A).concat(idList(o.B)), cost:o.op, over:false, k:"m:" + key(o.A) + ">" + key(o.B)});
+    }
+    applies.forEach(function(a){ expand(a.G, a.gi); });
+
+    var dbl = [];
+    leaf.forEach(function(l){
+      l.build.steps.forEach(function(s){
+        dbl.push({kind:"dbl", id:l.id, ids:[l.id], name:l.e.n, from:s.from, to:s.to, cost:s.cost, count:s.count, over:s.over, k:"d:" + l.id + ":" + s.to});
+      });
+    });
+
+    var app = applies.map(function(a, idx){
+      return {kind:"apply", i:idx + 1, b:names(a.G), ids:idList(a.G), cost:a.op, over:false, k:"a:" + idx + ":" + key(a.G)};
+    });
+
+    return {total:end.cost, leaf:leaf, dbl:dbl, merges:merges, applies:app};
+  }
+
+  var planCache = {};
+  function planFor(kit){
+    var ids = resolve(kit);
+    var sig = kit.id + "|" + ids.map(function(id){ return id + ":" + (E[id] ? state.v[id].level : ench(id).max); }).join(",");
+    if (!planCache[sig]) planCache[sig] = {ids:ids, p:plan(ids, function(id){ return E[id] ? state.v[id].level : ench(id).max; })};
+    return planCache[sig];
+  }
+  function resolve(kit){
+    var ids = kit.base.slice(), o = state.k[kit.id].opts;
+    kit.opts.forEach(function(op){
+      if (op.kind === "pick") ids.push(o[op.id]);
+      else if (o[op.id]) ids.push(op.ench);
+    });
+    return ids;
+  }
+
+  /* ---------- Build houses DOM ---------- */
+  var housesEl = document.getElementById("houses");
+  var rows = {}, houses = {};
+
+  function rowHTML(id){
+    var e = E[id];
+    var use = e.use + (e.t ? " · сокровище, цена ×2" : "");
+    var lvl;
+    if (e.max > 1) {
+      var opts = "";
+      for (var k = 1; k <= e.max; k++) opts += '<option value="' + k + '">' + R[k] + '</option>';
+      lvl = '<select id="lvl-' + id + '" aria-label="Уровень выпавшей книги: ' + e.n + '">' + opts + '</select><span class="hint" id="hint-' + id + '"></span>';
+    } else {
+      lvl = '<span class="lvl-static">I</span>';
+    }
+    return '' +
+      '<div class="row" data-id="' + id + '">' +
+        '<div class="a-chk"><input type="checkbox" id="done-' + id + '" aria-label="' + e.n + ' — житель готов"></div>' +
+        '<label class="a-who who" for="done-' + id + '"><span class="ench">' + e.n + ' <span class="maxlvl" title="Максимальный уровень">' + R[e.max] + '</span></span><span class="use">' + use + '</span></label>' +
+        '<div class="a-lvl"><span class="fl">Уровень</span>' + lvl + '</div>' +
+        '<div class="a-price"><span class="fl">Цена</span><div class="price">' + EMERALD + '<input id="price-' + id + '" type="number" inputmode="numeric" min="1" max="99" step="1" placeholder="—" aria-label="Цена книги в изумрудах: ' + e.n + '"></div></div>' +
+        '<div class="a-min min"><span class="fl">Минимум</span><b id="min-' + id + '"></b><span class="mx" id="max-' + id + '"></span></div>' +
+        '<div class="a-verdict"><span class="chip idle" id="chip-' + id + '">нет цены</span><span class="cure" id="cure-' + id + '"></span></div>' +
+      '</div>';
+  }
+
+  H.forEach(function(ids, i){
+    var n = i + 1;
+    var sec = document.createElement("section");
+    sec.className = "house";
+    sec.id = "dom-" + n;
+    sec.setAttribute("aria-labelledby", "hn-" + n);
+    var segs = ids.map(function(){ return "<i></i>"; }).join("");
+    sec.innerHTML =
+      '<div class="house-head">' +
+        '<h3 class="house-name" id="hn-' + n + '">Дом ' + n + '</h3>' +
+        '<span class="ready" id="ready-' + n + '" hidden>готов</span>' +
+        '<span class="segs" id="hs-' + n + '" aria-hidden="true">' + segs + '</span>' +
+        '<span class="house-count num" id="hc-' + n + '"></span>' +
+        '<span class="spacer"></span>' +
+        '<label class="built" id="bl-' + n + '"><input type="checkbox" id="built-' + n + '"> Построен</label>' +
+      '</div>' +
+      '<div class="cols" aria-hidden="true"><span class="a-chk"></span><span class="a-who">Житель</span><span class="a-lvl">Уровень</span><span class="a-price">Цена</span><span class="a-min">Минимум</span><span class="a-verdict">Оценка</span></div>' +
+      ids.map(rowHTML).join("") +
+      '<p class="all-done" id="ad-' + n + '" hidden>Все жители этого дома готовы.</p>';
+    housesEl.appendChild(sec);
+
+    houses[n] = {
+      el: sec, ids: ids,
+      chk: sec.querySelector("#built-" + n),
+      label: sec.querySelector("#bl-" + n),
+      count: sec.querySelector("#hc-" + n),
+      segs: sec.querySelectorAll("#hs-" + n + " i"),
+      ready: sec.querySelector("#ready-" + n),
+      allDone: sec.querySelector("#ad-" + n)
+    };
+    ids.forEach(function(id){
+      var el = sec.querySelector('.row[data-id="' + id + '"]');
+      rows[id] = {
+        el: el,
+        chk: el.querySelector("#done-" + id),
+        sel: el.querySelector("#lvl-" + id),
+        hint: el.querySelector("#hint-" + id),
+        price: el.querySelector("#price-" + id),
+        min: el.querySelector("#min-" + id),
+        max: el.querySelector("#max-" + id),
+        chip: el.querySelector("#chip-" + id),
+        cure: el.querySelector("#cure-" + id)
+      };
+    });
+  });
+
+  var segsV = document.getElementById("segsV");
+  segsV.innerHTML = H.map(function(ids){ return '<span class="grp">' + ids.map(function(id){ return '<i data-id="' + id + '"></i>'; }).join("") + '</span>'; }).join("");
+  var segsH = document.getElementById("segsH");
+  segsH.innerHTML = H.map(function(){ return "<i></i>"; }).join("");
+
+  /* ---------- Build kits DOM ---------- */
+  var kitsEl = document.getElementById("kits");
+  var kitEls = {};
+  KITS.forEach(function(k){
+    var d = document.createElement("details");
+    d.className = "kit";
+    d.id = "kit-" + k.id;
+    d.innerHTML =
+      '<summary>' +
+        '<span class="kicon">' + ICONS[k.icon] + '</span>' +
+        '<span class="kname">' + k.n + '</span>' +
+        '<span class="kbadges" id="kb-' + k.id + '"></span>' +
+        CHEV +
+      '</summary>' +
+      '<div class="kbody" id="kbody-' + k.id + '"></div>';
+    kitsEl.appendChild(d);
+    kitEls[k.id] = {el:d, badges:d.querySelector("#kb-" + k.id), body:d.querySelector("#kbody-" + k.id)};
+  });
+
+  /* ---------- Render villagers ---------- */
+  function verdict(price, mn, mx){
+    if (price == null) return {cls:"idle", text:"нет цены"};
+    if (price < mn || price > mx) return {cls:"out", text:"вне диапазона", title:"Такая цена бывает из-за спроса, скидки героя деревни или опечатки"};
+    if (price === mn) return {cls:"best", text:"минимум"};
+    var d = price - mn, r = (mx === mn) ? 0 : d / (mx - mn);
+    if (r <= 0.25) return {cls:"good", text:"+" + d + " к минимуму"};
+    if (r <= 0.6) return {cls:"mid", text:"+" + d + " к минимуму"};
+    return {cls:"high", text:"+" + d + ", дорого"};
+  }
+
+  var dirty = {};
+  function renderRow(id){
+    var s = state.v[id], e = E[id], r = rows[id];
+    r.el.classList.toggle("is-done", s.done);
+    r.chk.checked = s.done;
+    if (r.sel && document.activeElement !== r.sel) r.sel.value = String(s.level);
+    if (document.activeElement !== r.price && !dirty[id]) r.price.value = s.price == null ? "" : String(s.price);
+    var mn = pmin(s.level, e.t), mx = pmax(s.level, e.t);
+    r.min.textContent = mn;
+    r.max.textContent = "до " + mx;
+    if (r.hint) {
+      var k = e.max - s.level;
+      r.hint.textContent = k > 0 ? (Math.pow(2, k) + " " + booksWord(Math.pow(2, k)) + " до " + R[e.max]) : "";
+    }
+    var v = verdict(s.price, mn, mx);
+    r.chip.className = "chip " + v.cls;
+    r.chip.textContent = v.text;
+    if (v.title) r.chip.title = v.title; else r.chip.removeAttribute("title");
+    r.cure.textContent = s.price != null ? ("после лечения ≈ " + Math.max(1, s.price - 20)) : "";
+    var seg = segsV.querySelector('i[data-id="' + id + '"]');
+    if (seg) seg.classList.toggle("on", s.done);
+  }
+
+  var onlyTodo = document.getElementById("onlyTodo");
+  function renderSummary(){
+    var done = 0, built = 0;
+    Object.keys(state.v).forEach(function(id){ if (state.v[id].done) done++; });
+    Object.keys(houses).forEach(function(n, i){
+      var h = houses[n], hd = 0;
+      h.ids.forEach(function(id, j){ var on = state.v[id].done; if (on) hd++; h.segs[j].classList.toggle("on", on); });
+      var b = !!state.h[n].built;
+      if (b) built++;
+      h.chk.checked = b;
+      h.label.classList.toggle("on", b);
+      h.count.textContent = hd + " из " + h.ids.length;
+      h.ready.hidden = !(b && hd === h.ids.length);
+      h.allDone.hidden = !(onlyTodo.checked && hd === h.ids.length);
+      segsH.children[i].classList.toggle("on", b);
+    });
+    document.getElementById("sumV").innerHTML = done + "<small>/33</small>";
+    document.getElementById("sumH").innerHTML = built + "<small>/7</small>";
+  }
+
+  /* ---------- Render kits ---------- */
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function kitCost(kit){
+    var pc = planFor(kit), p = pc.p;
+    var buys = [], em = 0, guess = false, missing = [], outside = [], books = 0, emMap = {};
+    pc.ids.forEach(function(id){
+      var e = ench(id), inShop = !!E[id];
+      var lvl = inShop ? state.v[id].level : e.max;
+      var cnt = Math.pow(2, e.max - lvl);
+      books += cnt;
+      var unit = null, isGuess = false;
+      if (inShop){
+        unit = state.v[id].price;
+        if (unit == null){ unit = pmin(lvl, e.t); isGuess = true; guess = true; }
+        em += unit * cnt;
+        emMap[id] = unit * cnt;
+        if (!state.v[id].done) missing.push(e.n);
+      } else {
+        outside.push(e.n);
+      }
+      buys.push({id:id, e:e, lvl:lvl, cnt:cnt, unit:unit, guess:isGuess, inShop:inShop, lack:inShop && !state.v[id].done});
+    });
+    return {p:p, buys:buys, em:em, emMap:emMap, guess:guess, missing:missing, outside:outside, books:books, xp:p ? p.total : null};
+  }
+
+  function stepHTML(kit, s, text, sub, em, emGuess){
+    var on = !!state.k[kit.id].steps[s.k];
+    var idAttr = "st-" + kit.id + "-" + s.k.replace(/[^a-zA-Z0-9]/g, "_");
+    var xp = s.count && s.count > 1 ? (s.cost * s.count) : s.cost;
+    var xpTxt = s.count && s.count > 1
+      ? (xp + ' ур.<em>' + s.cost + ' × ' + s.count + '</em>')
+      : (xp + ' ур.');
+    return '<li class="step' + (on ? " on" : "") + (s.over ? " over" : "") + '">' +
+      '<input type="checkbox" id="' + idAttr + '" data-kit="' + kit.id + '" data-step="' + esc(s.k) + '"' + (on ? " checked" : "") + '>' +
+      '<label class="step-t" for="' + idAttr + '">' + text + (sub ? '<em>' + sub + '</em>' : '') + '</label>' +
+      '<span class="step-c">' + xpTxt + '</span>' +
+      '<span class="step-e">' + (em > 0 ? EMERALD + (emGuess ? "≈ " : "") + em : "") + '</span>' +
+      '</li>';
+  }
+
+  function renderKit(kit){
+    var c = kitCost(kit), el = kitEls[kit.id];
+
+    /* badges */
+    var bd = '';
+    if (c.xp == null) bd += '<span class="badge miss">план не влезает</span>';
+    else bd += '<span class="badge">' + c.xp + ' ' + lvlWord(c.xp) + '</span>';
+    bd += '<span class="badge em">' + EMERALD + (c.guess ? "≈ " : "") + c.em + '</span>';
+    if (c.missing.length) bd += '<span class="badge miss">нет ' + c.missing.length + ' ' + booksWord(c.missing.length) + '</span>';
+    else bd += '<span class="badge ok">книги есть</span>';
+    el.badges.innerHTML = bd;
+
+    /* options */
+    var o = state.k[kit.id].opts, ho = '';
+    kit.opts.forEach(function(op){
+      if (op.kind === "pick"){
+        var os = op.choices.map(function(ch){
+          var e = ench(ch[0]);
+          return '<option value="' + ch[0] + '"' + (o[op.id] === ch[0] ? " selected" : "") + '>' + ch[1] + (e.max > 1 ? " " + R[e.max] : "") + '</option>';
+        }).join("");
+        ho += '<label class="kopt">' + op.label + ' <select data-kit="' + kit.id + '" data-opt="' + op.id + '">' + os + '</select></label>';
+      } else {
+        ho += '<label class="ktoggle' + (o[op.id] ? " on" : "") + '"><input type="checkbox" data-kit="' + kit.id + '" data-opt="' + op.id + '"' + (o[op.id] ? " checked" : "") + '> ' + op.label + '</label>';
+      }
+    });
+    var optsHTML = ho ? '<div><p class="ksub">Вариант</p><div class="kopts">' + ho + '</div></div>' : '';
+
+    /* buys */
+    var bh = c.buys.map(function(b){
+      var lvlTxt = b.e.max > 1 ? " " + R[b.e.max] : "";
+      var sub;
+      if (!b.inShop) sub = b.e.src;
+      else if (b.cnt > 1) sub = "у жителя " + R[b.lvl] + " — купить " + b.cnt + " " + booksWord(b.cnt) + " и склеить";
+      else sub = b.lack ? "житель ещё не готов" : "";
+      var right = b.inShop
+        ? '<span class="buy-e">' + EMERALD + (b.guess ? "≈ " : "") + (b.unit * b.cnt) + '</span>'
+        : '<span class="buy-c">не у жителя</span>';
+      return '<div class="buy' + (b.lack ? " lack" : "") + '">' +
+        '<span class="buy-n"><b>' + b.e.n + lvlTxt + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</span>' +
+        '<span class="buy-c">×' + b.cnt + '</span>' + right + '</div>';
+    }).join("");
+
+    /* steps */
+    var sh = '';
+    if (!c.p){
+      sh = '<p class="kwarn">С такими уровнями книг любой порядок упирается в потолок наковальни в 40 уровней. Подними уровень книг у жителей или убери часть зачарований.</p>';
+    } else {
+      var seen = {}, gm = {};
+      c.buys.forEach(function(b){ if (b.guess) gm[b.id] = true; });
+      var stepG = false;
+      function stepEm(s){
+        var sum = 0; stepG = false;
+        (s.ids || []).forEach(function(id){
+          if (seen[id]) return;
+          seen[id] = true;
+          if (c.emMap[id] != null){ sum += c.emMap[id]; if (gm[id]) stepG = true; }
+        });
+        return sum;
+      }
+      var parts = '';
+      if (c.p.dbl.length){
+        parts += '<li class="step-hd"><span></span><span>Склейка книг до максимума</span><span>Опыт</span><span>Изумруды</span></li>';
+        c.p.dbl.forEach(function(s){
+          parts += stepHTML(kit, s, esc(s.name + " " + R[s.from] + " + " + s.name + " " + R[s.from] + " → " + R[s.to]), s.count > 1 ? "повторить " + s.count + " " + word(s.count, "раз", "раза", "раз") : "", stepEm(s), stepG);
+        });
+      }
+      if (c.p.merges.length){
+        parts += '<li class="step-hd"><span></span><span>Сборка книг между собой</span><span>Опыт</span><span>Изумруды</span></li>';
+        c.p.merges.forEach(function(s){
+          parts += stepHTML(kit, s, esc("«" + s.a.join(" + ") + "»  +  «" + s.b.join(" + ") + "»"), "", stepEm(s), stepG);
+        });
+      }
+      parts += '<li class="step-hd"><span></span><span>Наложение на предмет</span><span>Опыт</span><span>Изумруды</span></li>';
+      c.p.applies.forEach(function(s){
+        parts += stepHTML(kit, s, esc(kit.n + "  +  «" + s.b.join(" + ") + "»"), "", stepEm(s), stepG);
+      });
+      sh = '<ol class="steps">' + parts + '</ol>';
+    }
+
+    var doneSteps = 0, totalSteps = 0;
+    if (c.p){
+      var all = c.p.dbl.concat(c.p.merges, c.p.applies);
+      totalSteps = all.length;
+      all.forEach(function(s){ if (state.k[kit.id].steps[s.k]) doneSteps++; });
+    }
+
+    var tot = '<div class="ktotal">';
+    if (c.xp != null) tot += '<span>Опыт: <b>' + c.xp + ' ' + lvlWord(c.xp) + '</b></span>';
+    tot += '<span>Изумруды: <b>' + (c.guess ? "≈ " : "") + c.em + '</b></span>';
+    tot += '<span>Книг купить: <b>' + c.books + '</b></span>';
+    if (totalSteps) tot += '<span>Шагов сделано: <b>' + doneSteps + " из " + totalSteps + '</b></span>';
+    tot += '</div>';
+
+    var warn = '';
+    if (c.missing.length) warn += '<p class="kwarn">Ещё не готовы жители: ' + esc(c.missing.join(", ")) + '.</p>';
+    if (c.guess) warn += '<p class="kwarn">Часть цен не вписана — изумруды посчитаны по минимальной цене, в игре выйдет дороже.</p>';
+    if (c.outside.length) warn += '<p class="kwarn">Не продаётся библиотекарями: ' + esc(c.outside.join(", ")) + '. В изумрудах не учтено.</p>';
+
+    el.body.innerHTML = optsHTML +
+      '<div><p class="ksub">Что купить</p><div class="buys">' + bh + '</div></div>' +
+      '<div><p class="ksub">План на наковальне</p>' + sh + '</div>' +
+      tot + warn;
+
+    return c;
+  }
+
+  function renderKits(){
+    var xp = 0, em = 0, guess = false, missing = 0, broken = 0;
+    KITS.forEach(function(k){
+      var c = renderKit(k);
+      if (c.xp == null) broken++; else xp += c.xp;
+      em += c.em;
+      if (c.guess) guess = true;
+      missing += c.missing.length;
+    });
+    document.getElementById("sumXP").textContent = xp;
+    document.getElementById("sumEm").textContent = (guess ? "≈ " : "") + em;
+    document.getElementById("noteXP").textContent = "на " + KITS.length + " предметов" + (broken ? ", " + broken + " не помещается в 40 уровней" : "");
+    document.getElementById("noteEm").textContent = guess ? "часть цен не вписана, взят минимум" : "по вписанным ценам";
+  }
+
+  function renderAll(){ Object.keys(rows).forEach(renderRow); renderSummary(); renderKits(); }
+
+  try { onlyTodo.checked = localStorage.getItem(LSF) === "1"; } catch (e) {}
+  function applyFilter(){
+    SCOPE.classList.toggle("only-todo", onlyTodo.checked);
+    try { localStorage.setItem(LSF, onlyTodo.checked ? "1" : "0"); } catch (e) {}
+    renderSummary();
+  }
+  onlyTodo.addEventListener("change", applyFilter);
+
+  /* ---------- Saving ---------- */
+  var saveEl = document.getElementById("save");
+  var SAVE_TEXT = {
+    connecting: "Подключаю сохранение…",
+    local: "Сохраняется только в этом браузере",
+    saving: "Сохраняю…",
+    saved: "Всё сохранено",
+    error: "Не удалось сохранить — проверь интернет",
+    readonly: "Только просмотр: изменения не сохраняются"
+  };
+  function setSave(s){ saveEl.dataset.s = s; saveEl.textContent = SAVE_TEXT[s]; }
+
+  var db = null, connecting = true, readOnly = false, pending = 0, lastErr = null;
+  var inflight = {}, again = {}, early = {};
+
+  function setReadOnly(){
+    readOnly = true;
+    setSave("readonly");
+    document.querySelectorAll(".houses input, .houses select, .kits input, .kits select").forEach(function(el){ el.disabled = true; });
+  }
+
+  function persist(key, run){
+    if (readOnly) return;
+    if (!db) { if (connecting) early[key] = run; return; }
+    if (inflight[key]) { again[key] = run; return; }
+    inflight[key] = true; pending++; setSave("saving");
+    var tries = 0;
+    function attempt(){
+      return run().catch(function(err){
+        if (err && err.code === "unavailable" && tries++ < 1) {
+          return new Promise(function(res){ setTimeout(res, 600 + Math.random() * 900); }).then(attempt);
+        }
+        throw err;
+      });
+    }
+    attempt().then(function(){ lastErr = null; }, function(err){
+      var code = err && err.code;
+      if (code === "invalid_argument" || code === "not_granted" || code === "revoked" || code === "permission-denied") setReadOnly();
+      else { lastErr = err; setSave("error"); }
+    }).then(function(){
+      inflight[key] = false; pending--;
+      var next = again[key]; again[key] = null;
+      if (next) persist(key, next);
+      else if (pending === 0 && !lastErr && !readOnly) setSave("saved");
+    });
+  }
+  function persistV(id){
+    persist("v:" + id, function(){
+      var s = state.v[id];
+      return db.collection("villagers").doc(id).set({done: !!s.done, price: s.price == null ? null : s.price, level: s.level});
+    });
+  }
+  function persistH(n){
+    persist("h:" + n, function(){ return db.collection("houses").doc("h" + n).set({built: !!state.h[n].built}); });
+  }
+  function persistK(id){
+    persist("k:" + id, function(){
+      var s = state.k[id];
+      return db.collection("kits").doc(id).set({opts: s.opts, steps: Object.keys(s.steps).filter(function(x){ return s.steps[x]; })});
+    });
+  }
+
+  /* ---------- Events ---------- */
+  var timers = {};
+  Object.keys(rows).forEach(function(id){
+    var r = rows[id];
+    r.chk.addEventListener("change", function(){
+      state.v[id].done = r.chk.checked;
+      renderRow(id); renderSummary(); renderKits(); saveLocal(); persistV(id);
+    });
+    if (r.sel) r.sel.addEventListener("change", function(){
+      state.v[id].level = parseInt(r.sel.value, 10);
+      renderRow(id); renderKits(); saveLocal(); persistV(id);
+    });
+    r.price.addEventListener("input", function(){
+      var t = r.price.value.trim(), n = t === "" ? null : parseInt(t, 10);
+      state.v[id].price = (n != null && isFinite(n) && n > 0) ? n : null;
+      dirty[id] = true;
+      renderRow(id); renderKits(); saveLocal();
+      clearTimeout(timers[id]);
+      timers[id] = setTimeout(function(){ timers[id] = null; dirty[id] = false; persistV(id); }, 800);
+    });
+    r.price.addEventListener("blur", function(){
+      if (timers[id]) { clearTimeout(timers[id]); timers[id] = null; }
+      if (dirty[id]) { dirty[id] = false; persistV(id); }
+      renderRow(id);
+    });
+  });
+  Object.keys(houses).forEach(function(n){
+    var h = houses[n];
+    h.chk.addEventListener("change", function(){
+      state.h[n].built = h.chk.checked;
+      renderSummary(); saveLocal(); persistH(n);
+    });
+  });
+
+  kitsEl.addEventListener("change", function(ev){
+    var t = ev.target, kid = t.getAttribute("data-kit");
+    if (!kid || !state.k[kid]) return;
+    var opt = t.getAttribute("data-opt"), step = t.getAttribute("data-step");
+    if (opt){
+      state.k[kid].opts[opt] = (t.tagName === "SELECT") ? t.value : t.checked;
+    } else if (step){
+      if (t.checked) state.k[kid].steps[step] = true; else delete state.k[kid].steps[step];
+    } else return;
+    renderKit(KITS.filter(function(k){ return k.id === kid; })[0]);
+    renderKits();
+    saveLocal(); persistK(kid);
+  });
+
+  /* ---------- Connect to shared storage ---------- */
+
+  function loadScript(src){
+    return new Promise(function(res, rej){
+      var el = document.createElement("script");
+      el.src = src; el.async = true;
+      el.onload = function(){ res(); };
+      el.onerror = function(){ rej(new Error("cdn")); };
+      document.head.appendChild(el);
+    });
+  }
+  function openSupabase(){
+    var cfg = window.SUPABASE || {};
+    if (!cfg.url || !cfg.key) return Promise.resolve(null);
+    return loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js")
+      .then(function(){
+        var client = window.supabase.createClient(cfg.url, cfg.key);
+        var TABLE = "mc_state";
+        var SPACE = window.SYNC_SPACE || "main";
+        var cache = {}, subs = {}, channel = null;
+
+        function emit(col){
+          var cb = subs[col];
+          if (!cb) return;
+          var m = cache[col] || {};
+          cb({docs: Object.keys(m).map(function(id){
+            return {id: id, exists: true, data: function(){ return m[id]; }};
+          })});
+        }
+        function listen(){
+          if (channel) return;
+          channel = client.channel("mc_state_" + SPACE)
+            .on("postgres_changes",
+                {event: "*", schema: "public", table: TABLE, filter: "space=eq." + SPACE},
+                function(p){
+                  var row = (p.new && p.new.id) ? p.new : p.old;
+                  if (!row || !row.col) return;
+                  cache[row.col] = cache[row.col] || {};
+                  if (p.eventType === "DELETE") delete cache[row.col][row.id];
+                  else cache[row.col][row.id] = row.data;
+                  emit(row.col);
+                })
+            .subscribe();
+        }
+        var api = {
+          collection: function(col){
+            return {
+              doc: function(id){
+                return {
+                  set: function(data){
+                    return client.from(TABLE)
+                      .upsert({space: SPACE, col: col, id: id, data: data}, {onConflict: "space,col,id"})
+                      .then(function(r){
+                        if (r.error) throw r.error;
+                        cache[col] = cache[col] || {};
+                        cache[col][id] = data;
+                        return r;
+                      });
+                  }
+                };
+              },
+              onSnapshot: function(cb, onErr){
+                subs[col] = cb;
+                listen();
+                client.from(TABLE).select("id,data").eq("space", SPACE).eq("col", col)
+                  .then(function(r){
+                    if (r.error){ if (onErr) onErr(r.error); return; }
+                    var m = {};
+                    (r.data || []).forEach(function(row){ m[row.id] = row.data; });
+                    cache[col] = m;
+                    emit(col);
+                  });
+              }
+            };
+          }
+        };
+        /* пробный запрос: если база недоступна (например, внутри артефакта
+           Claude, где внешняя сеть закрыта), возвращаем null и уходим
+           на запасное хранилище */
+        return client.from(TABLE).select("id").limit(1).then(function(r){
+          if (r.error) throw r.error;
+          return api;
+        });
+      })
+      .catch(function(){ return null; });
+  }
+  function openClaudeDB(){
+    var p = null;
+    try { if (window.claude && typeof window.claude.use === "function") p = window.claude.use("db"); }
+    catch (e) { p = null; }
+    if (!p) return Promise.resolve(null);
+    return Promise.resolve(p).catch(function(){ return null; });
+  }
+  function openDB(){
+    return openSupabase().then(function(ns){ return ns || openClaudeDB(); });
+  }
+  function connect(){
+    openDB().then(function(ns){
+      connecting = false;
+      db = ns || null;
+      if (!db) { early = {}; setSave("local"); return; }
+      setSave("saving");
+      Object.keys(early).forEach(function(key){ persist(key, early[key]); });
+      early = {};
+
+      var firstV = true, firstH = true, gotV = false, gotH = false, gotK = false;
+      function settle(){ if (gotV && gotH && gotK && pending === 0 && !lastErr && !readOnly) setSave("saved"); }
+
+      db.collection("villagers").onSnapshot(function(snap){
+        var seen = {};
+        snap.docs.forEach(function(d){
+          if (!d.exists || !E[d.id]) return;
+          seen[d.id] = true;
+          if (inflight["v:" + d.id] || dirty[d.id]) return;
+          state.v[d.id] = clean(d.data(), d.id);
+          renderRow(d.id);
+        });
+        if (firstV) {
+          firstV = false;
+          Object.keys(E).forEach(function(id){ if (!seen[id] && !isDefault(state.v[id], id)) persistV(id); });
+        }
+        gotV = true; renderSummary(); renderKits(); saveLocal(); settle();
+      }, function(){ lastErr = true; setSave("error"); });
+
+      db.collection("houses").onSnapshot(function(snap){
+        var seen = {};
+        snap.docs.forEach(function(d){
+          var n = d.id.replace(/^h/, "");
+          if (!d.exists || !state.h[n]) return;
+          seen[n] = true;
+          if (inflight["h:" + n]) return;
+          var x = d.data() || {};
+          state.h[n].built = !!x.built;
+        });
+        if (firstH) {
+          firstH = false;
+          Object.keys(state.h).forEach(function(n){ if (!seen[n] && state.h[n].built) persistH(n); });
+        }
+        gotH = true; renderSummary(); saveLocal(); settle();
+      }, function(){ lastErr = true; setSave("error"); });
+
+      db.collection("kits").onSnapshot(function(snap){
+        snap.docs.forEach(function(d){
+          var kit = KITS.filter(function(k){ return k.id === d.id; })[0];
+          if (!d.exists || !kit) return;
+          if (inflight["k:" + d.id]) return;
+          state.k[d.id] = cleanKit(kit, d.data());
+        });
+        gotK = true; renderKits(); saveLocal(); settle();
+      }, function(){ lastErr = true; setSave("error"); });
+    });
+  }
+
+  renderAll();
+  applyFilter();
+  connect();
+})();
+
+</script>
+
+<script>
+(function(){
+  var views = {storage: document.getElementById('view-storage'), village: document.getElementById('view-village')};
+  var tabs  = {storage: document.getElementById('tab-storage'),  village: document.getElementById('tab-village')};
+  var KEY = 'mc-hub-tab';
+  function set(name, scroll){
+    if (!views[name]) name = 'storage';
+    Object.keys(views).forEach(function(k){
+      views[k].hidden = (k !== name);
+      tabs[k].classList.toggle('on', k === name);
+      tabs[k].setAttribute('aria-selected', k === name ? 'true' : 'false');
+    });
+    document.body.dataset.tab = name;
+    try { localStorage.setItem(KEY, name); } catch (e) {}
+    if (location.hash !== '#' + name) {
+      try { history.replaceState(null, '', '#' + name); } catch (e) { location.hash = name; }
+    }
+    if (scroll) window.scrollTo(0, 0);
+  }
+  function measure(){
+    var bar = document.querySelector('.topbar');
+    if (bar) document.documentElement.style.setProperty('--bar-h', bar.offsetHeight + 'px');
+  }
+  measure();
+  window.addEventListener('resize', measure);
+  Object.keys(tabs).forEach(function(k){ tabs[k].addEventListener('click', function(){ set(k, true); }); });
+  window.addEventListener('hashchange', function(){
+    var h = location.hash.replace('#', '');
+    if (views[h]) set(h, false);
+  });
+  var init = location.hash.replace('#', '');
+  if (!views[init]) { try { init = localStorage.getItem(KEY) || 'storage'; } catch (e) { init = 'storage'; } }
+  set(init, false);
+})();
+</script>
+
+</body>
+</html>
